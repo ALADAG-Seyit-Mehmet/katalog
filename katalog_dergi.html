@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SEDİRKON 2026 | Dergi Katalog</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap"
@@ -586,36 +586,43 @@
 
             const pageFlip = new St.PageFlip(flipContainer, {
                 width: 500, // base width
-                height: 707, // base height (A4 aspect ratio)
-                size: "stretch", // Use stretch for responsive behavior
+                height: 707, // base height
+                size: "stretch", // Stretch to fit the container precisely
                 autoSize: true, 
                 flippingTime: 800,
                 maxShadowOpacity: 0.3,
                 showCover: true,
                 startPage: 0,
-                mobileScrollSupport: true, // Enabled for better touch support
-                usePortrait: isMobile, // Single page on mobile
+                mobileScrollSupport: true,
+                usePortrait: isMobile,
                 drawShadow: true,
                 showPageCorners: true,
-                minWidth: 200,
-                maxWidth: 1000,
-                minHeight: 300,
-                maxHeight: 1414
+                minWidth: 250,
+                maxWidth: 2000,
+                minHeight: 400,
+                maxHeight: 2533,
+                swipeDistance: 30, // Easier swiping on mobile
+                clickEventForward: true // Fix for nested buttons
             });
 
-            // Delay loading slightly to ensure images are starting to cache
-            // and the UI is ready
-            setTimeout(() => {
-                pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-                
-                // Hide loading overlay once loaded
+            // Initial load
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+            
+            // Wait for first render to hide loader
+            pageFlip.on('init', () => {
                 loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.style.display = 'none';
-                }, 500);
+                setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
+            });
 
-                document.getElementById('page-total').innerText = pageFlip.getPageCount();
-            }, 500);
+            // Fallback: If init doesn't fire (rare), hide loader after timeout
+            setTimeout(() => {
+                if (loadingOverlay.style.display !== 'none') {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
+                }
+            }, 3000);
+
+            document.getElementById('page-total').innerText = pageFlip.getPageCount();
 
             pageFlip.on('flip', (e) => {
                 const currentPage = pageFlip.getCurrentPageIndex() + 1;
@@ -644,11 +651,17 @@
                 pageFlip.flipNext();
             });
 
-            // Handle window resize
+            // Handle window resize properly
+            let resizeTimer;
             window.addEventListener('resize', () => {
-                // If switching from mobile to desktop or vice versa, a reload might be needed
-                // but usually stretch/autoSize handles minor changes. 
-                // Full orientation changes are best handled by a refresh or re-init.
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    // Update state if needed
+                    const newIsMobile = window.innerWidth < 768;
+                    if (newIsMobile !== isMobile) {
+                        location.reload(); // Hard reload for major orientation/device change is safest
+                    }
+                }, 250);
             });
         });
     </script>
