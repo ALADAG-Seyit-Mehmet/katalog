@@ -7,21 +7,15 @@
     --light: #f9f9f9;
     --gray: #666;
     --border: #ddd;
-    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Fluid Typography - Mobile first */
-    --fs-base: clamp(0.875rem, 0.8rem + 0.375vw, 1.125rem);
-    --fs-h1: clamp(2.5rem, 8vw, 4.5rem);
-    --fs-h2: clamp(1.75rem, 5vw, 3rem);
-    --fs-h3: clamp(1.25rem, 4vw, 2.5rem);
-    --fs-eyebrow: clamp(0.7rem, 2vw, 0.9rem);
+    --transition: all 0.4s ease;
+    --book-width: 500px;
+    --book-height: 707px;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -29,19 +23,17 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Controlled by catalog logic */
-    position: fixed;
-    background-color: var(--darker);
-    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    position: fixed; /* Prevents scroll bounce on mobile */
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
+    background-color: var(--darker);
     color: var(--dark);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    font-size: var(--fs-base);
 }
 
 /* --- Container & Controls --- */
@@ -56,70 +48,73 @@ body {
     justify-content: center;
     overflow: hidden;
     min-height: 0;
+    background-color: var(--darker);
 }
 
 /* --- Loading Spinner --- */
 .loading-overlay {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: var(--darker);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    transition: opacity 0.5s ease;
 }
 
 .spinner {
-    width: min(50px, 12vw);
-    height: min(50px, 12vw);
+    width: 50px;
+    height: 50px;
     border: 3px solid rgba(212, 175, 55, 0.1);
     border-top: 3px solid var(--gold);
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px;
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .loading-text {
     color: var(--gold);
-    letter-spacing: 0.2rem;
-    font-size: var(--fs-eyebrow);
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
     text-transform: uppercase;
 }
 
 .controls {
     flex-shrink: 0;
-    width: max-content;
-    max-width: 90%;
-    margin: 0.75rem auto;
+    width: fit-content;
+    margin: 10px auto;
     z-index: 100;
     display: flex;
-    gap: 1rem;
+    gap: 15px;
     align-items: center;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 0.5rem 1.25rem;
-    border-radius: 2rem;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
 }
 
 .btn {
     background: transparent;
     color: var(--gold);
     border: 1px solid var(--gold);
-    padding: 0.6rem 1.2rem; /* Larger touch area */
-    min-height: 44px; /* A11y requirement */
-    border-radius: 1.5rem;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
-    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
+    font-weight: 500;
     transition: var(--transition);
-    white-space: nowrap;
 }
 
 .btn:hover {
@@ -129,16 +124,19 @@ body {
 
 .page-count {
     color: #fff;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* --- Flipbook Base --- */
 .flip-book {
     width: 100%;
+    max-width: 1000px;
     height: 100%;
+    /* No max-height here, let catalog-wrapper handle constraints */
     margin: auto;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    /* Changed from display: none to visibility to ensure measurement is possible */
     visibility: hidden;
     opacity: 0;
     background-color: #1a1a1a;
@@ -150,20 +148,66 @@ body {
     display: block !important;
 }
 
-/* Mobile defaults for flipbook */
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
     .flip-book {
-        max-width: 100vw;
-        height: 75vh !important; /* Ensure it fits with controls */
+        max-width: 100%;
+        height: 70vh; /* Explicit mobile height to avoid slivers */
     }
 }
 
-/* Desktop sizing */
-@media (min-width: 1024px) {
-    .flip-book {
-        max-width: 1200px;
-        height: 85vh !important;
+/* --- Mobile Access Warning --- */
+.mobile-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--darker);
+    color: var(--gold);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.mobile-warning i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.mobile-warning h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.mobile-warning p {
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 300px;
+}
+
+/* Detect mobile/tablet and block content */
+@media (max-width: 1024px) {
+    .controls, .catalog-wrapper {
+        display: none !important;
     }
+    .mobile-warning {
+        display: flex;
+    }
+    body {
+        overflow: hidden !important;
+        position: fixed !important;
+    }
+}
+
+/* St.PageFlip internal parent stabilization */
+.stf__parent {
+    margin: auto !important;
 }
 
 .page {
@@ -180,13 +224,13 @@ body {
     height: 100%;
 }
 
-/* Book binding effect */
+/* Book binding effect - Optimized for professional look */
 .page:nth-child(odd) {
-    box-shadow: inset 15px 0 25px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 10px 0 15px rgba(0, 0, 0, 0.03);
 }
 
 .page:nth-child(even) {
-    box-shadow: inset -15px 0 25px rgba(0, 0, 0, 0.05);
+    box-shadow: inset -10px 0 15px rgba(0, 0, 0, 0.03);
 }
 
 .page-content {
@@ -195,35 +239,48 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: clamp(1rem, 4vw, 3rem); /* Responsive padding */
 }
 
 /* --- Typography --- */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     font-family: 'Playfair Display', serif;
-    line-height: 1.2;
-    color: inherit;
 }
 
-h1 { font-size: var(--fs-h1); }
-h2 { font-size: var(--fs-h2); }
-h3 { font-size: var(--fs-h3); }
-
 .eyebrow {
-    font-size: var(--fs-eyebrow);
-    letter-spacing: 0.25rem;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
     display: block;
-    font-weight: 600;
+}
+
+.print-bg {
+    display: none;
 }
 
 /* --- Cover Pages --- */
 .page-cover {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('kapak_arkaplan.png') center/cover no-base;
+    background-color: transparent;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('kapak_arkaplan.png');
+    background-size: cover;
+    background-position: center;
     color: var(--gold);
-    padding: 0; /* Cover handles its own padding */
+    border: none;
+}
+
+.page-cover::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    pointer-events: none;
 }
 
 .cover-inner,
@@ -234,47 +291,58 @@ h3 { font-size: var(--fs-h3); }
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: clamp(1.5rem, 8vw, 4rem);
+    padding: 40px;
 }
 
 .cover-inner h1 {
+    font-size: 3.5rem;
     font-weight: 700;
-    letter-spacing: 0.4rem;
-    margin-bottom: 0.5rem;
+    letter-spacing: 5px;
+    margin-bottom: 10px;
+    line-height: 1.1;
 }
 
 .subtitle {
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.75rem, 2vw, 1rem);
-    letter-spacing: 0.15rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-}
-
-.subtitle-en {
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.5);
-    letter-spacing: 0.2rem;
-    margin-top: -1.5rem;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    font-weight: 300;
+    color: #ccc;
+    margin-bottom: 40px;
 }
 
 .cover-bottom {
     position: absolute;
-    bottom: clamp(1rem, 5vw, 3rem);
-    width: 80%;
-    font-size: clamp(0.6rem, 1.5vw, 0.85rem);
-    color: rgba(255, 255, 255, 0.6);
+    bottom: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #888;
+}
+
+.series-desc-en {
+    font-size: 0.82em;
+    color: #777;
+    margin-top: 6px;
+    line-height: 1.4;
+    display: block;
+}
+
+.subtitle-en {
+    font-size: 0.75em;
+    color: #666;
+    letter-spacing: 3px;
+    margin-top: -15px; /* Pull closer to Turkish subtitle */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 400;
 }
 
 .cover-bottom-en {
-    display: block;
-    font-size: 0.8em;
-    margin-top: 0.25rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75em;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 1px;
 }
 
 /* --- Logo Integration (Clean PNG Style) --- */
@@ -299,85 +367,77 @@ h3 { font-size: var(--fs-h3); }
     filter: brightness(1.4) contrast(1.3) saturate(1.2); 
 }
 
-/* --- Logo Integration --- */
-.logo-crop {
-    width: min(250px, 60%); 
-    aspect-ratio: 2.5/1;
-    overflow: hidden;
-    margin: 0 auto 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    filter: brightness(1.2) contrast(1.1);
-}
-
-.logo-crop img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
+/* Specific styling for front cover focus */
 .front-logo {
-    width: min(320px, 75%);
-    margin-bottom: 1rem;
+    width: 320px;
+    height: 140px;
+    margin-bottom: 5px;
 }
 
 .back-logo {
-    width: min(200px, 50%);
+    width: 200px;
+    height: 80px;
 }
 
-/* --- Inside Cover --- */
+/* --- Inside Cover (Pattern) --- */
 .page-inside-cover .page-content {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Context for absolute children */
 }
 
 .brand-showcase {
     position: relative;
     z-index: 2;
-    width: min(350px, 70%);
-    aspect-ratio: 1;
+    width: 65%;
+    max-width: 350px;
     mix-blend-mode: multiply;
-    opacity: 0.9;
+    filter: brightness(1.1) contrast(1.1);
+    opacity: 0.95;
 }
 
 .pattern-bg {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 2rem 2rem;
-    opacity: 0.3;
+    background-size: 20px 20px;
+    opacity: 0.4;
     z-index: 1;
 }
 
 /* --- Intro / TOC Page --- */
 .content-inner {
+    padding: 40px;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .intro-page h2 {
-    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: var(--dark);
+    margin-bottom: 30px;
     border-bottom: 2px solid var(--gold);
-    padding-bottom: 0.5rem;
-    align-self: flex-start;
+    padding-bottom: 10px;
+    display: inline-block;
 }
 
 .toc-list {
-    flex: 1;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(1rem, 2vh, 2rem);
+    gap: 20px;
 }
 
 .toc-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 15px;
 }
 
 .toc-num {
@@ -389,18 +449,17 @@ h3 { font-size: var(--fs-h3); }
 
 .toc-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-    letter-spacing: 0.05rem;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
     font-weight: 500;
     text-transform: uppercase;
 }
 
 .toc-line {
-    flex: 1;
     height: 1px;
     background-color: var(--border);
-    margin: 0 1rem;
-    opacity: 0.5;
+    margin: 5px 0;
+    width: 50%;
 }
 
 .intro-text {
@@ -408,9 +467,9 @@ h3 { font-size: var(--fs-h3); }
     color: var(--gray);
     text-align: center;
     margin-top: auto;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
+    padding-top: 20px;
 }
 
 /* --- Full Bleed Image / Spread Logic --- */
@@ -418,9 +477,13 @@ h3 { font-size: var(--fs-h3); }
     padding: 0;
 }
 
+/* Updated logic for doing full bleed spread across 2 pages using background */
 .page-spread-left .page-content,
 .page-spread-right .page-content {
+    background-size: 200vw 100vh;
+    /* Make the background double the viewport width to behave like a true spread, fallback sizes below */
     background-size: 200% 100%;
+    /* Stretch exactly to double the page size */
     background-repeat: no-repeat;
     background-position: left center;
     width: 100%;
@@ -431,25 +494,29 @@ h3 { font-size: var(--fs-h3); }
     background-position: right center;
 }
 
+/* Overlay Styling for Text on Image */
 .hero-text-overlay {
     position: absolute;
     z-index: 10;
     width: 100%;
+    /* Background for readability */
+    /* background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%); */
 }
 
+/* Since the image is spread across two panels, but the right panel is where the caption usually goes */
 .bottom-right {
-    bottom: clamp(1.5rem, 5vw, 3rem);
-    right: clamp(1.5rem, 5vw, 3rem);
+    bottom: 30px;
+    right: 30px;
     text-align: right;
 }
 
 .hero-text-overlay h3 {
     font-family: 'Great Vibes', cursive;
-    font-size: clamp(2.5rem, 10vw, 5rem);
+    font-size: 4rem;
     color: #fff;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
     margin: 0;
-    line-height: 0.8;
+    line-height: 1;
 }
 
 /* --- Info Text Page --- */
@@ -457,44 +524,41 @@ h3 { font-size: var(--fs-h3); }
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    padding: 50px;
 }
 
 .series-badge {
     display: inline-block;
     background-color: var(--dark);
     color: var(--gold);
-    padding: 0.3rem 1rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.15rem;
+    padding: 5px 15px;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    width: fit-content;
+    margin-bottom: 20px;
 }
 
 .series-title {
-    font-size: var(--fs-h2);
-    margin-bottom: 1rem;
+    font-size: 2.8rem;
+    margin-bottom: 20px;
     line-height: 1.1;
-    color: var(--dark);
 }
 
 .series-desc {
     color: var(--gray);
-    margin-bottom: 2rem;
-    font-size: 1rem;
-    max-width: 90%;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
 }
 
 .series-specs {
     list-style: none;
     border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
+    padding-top: 20px;
 }
 
 .series-specs li {
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
     display: flex;
     justify-content: space-between;
 }
@@ -508,127 +572,145 @@ h3 { font-size: var(--fs-h3); }
 .multi-image-layout {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 15px;
+    padding: 20px;
     height: 100%;
 }
 
 .multi-image-layout figure {
     position: relative;
     flex: 1;
+    /* Takes half height */
     overflow: hidden;
+    margin: 0;
 }
 
 .multi-image-layout img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.5s ease;
 }
 
 .multi-image-layout img:hover {
     transform: scale(1.05);
 }
 
-/* --- Contact & QR Sections --- */
-.contact-info-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    margin-top: 1.5rem;
+/* Right aligned text variations */
+.text-right {
+    text-align: right;
 }
 
-@media (min-width: 768px) {
-    .contact-info-grid {
-        flex-direction: row;
-        justify-content: center;
-        gap: 2.5rem;
-    }
+.align-right {
+    justify-content: flex-end;
+}
+
+.text-right .series-badge {
+    margin-left: auto;
+}
+
+.contact-info-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
 }
 
 .contact-text {
-    text-align: center;
+    text-align: right;
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+    padding-right: 30px;
 }
 
-@media (min-width: 768px) {
-    .contact-text {
-        text-align: right;
-        border-right: 1px solid rgba(212, 175, 55, 0.3);
-        padding-right: 2rem;
-    }
+.contact-text p {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #eee;
 }
 
 .contact-text strong {
     color: var(--gold);
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
+    letter-spacing: 1px;
     font-size: 1.1rem;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 10px;
 }
 
 .qr-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 10px;
 }
 
 .qr-code-premium {
-    width: min(180px, 40vw);
-    aspect-ratio: 1;
+    width: 180px;
+    height: 180px;
     border: 1px solid var(--gold);
-    padding: 0.5rem;
+    padding: 8px;
     background: #fff;
-    border-radius: 0.25rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.qr-label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* --- Back Cover --- */
 .back-cover-inner h2 {
-    font-size: var(--fs-h2);
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
     color: var(--gold);
 }
 
 .tagline {
     font-style: italic;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 3rem;
+    color: #ccc;
+    margin-bottom: 50px;
     font-family: 'Playfair Display', serif;
 }
 
 .contact-info {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: #eee;
     line-height: 1.8;
 }
 
-.legal {
-    margin-top: auto;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
-    letter-spacing: 0.05rem;
-    padding-top: 2rem;
+.contact-info p {
+    margin-bottom: 20px;
 }
 
-/* --- Technical Specs --- */
+.legal {
+    margin-top: 50px;
+    font-size: 0.75rem;
+    color: #666;
+    letter-spacing: 1px;
+}
+
+/* --- Technical Specs in Magazine --- */
 .technical-specs {
-    margin-top: 1rem;
-    padding: 1rem;
+    margin-top: 15px;
+    padding: 12px;
     border-top: 2px solid #000;
     border-bottom: 2px solid #000;
-    background-color: #fff;
+    background-color: #ffffff;
     width: 100%;
+    /* Take full width of the info column */
 }
 
 .spec-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 0.25rem;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
 }
 
 .spec-row:last-child {
@@ -637,16 +719,18 @@ h3 { font-size: var(--fs-h3); }
 }
 
 .spec-label {
-    font-weight: 800;
-    font-size: 0.75rem;
+    font-weight: 900;
+    font-size: 0.85rem;
     text-transform: uppercase;
     color: #000;
+    letter-spacing: 1px;
 }
 
 .spec-value {
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: 800;
+    font-size: 1rem;
     color: #000;
+    font-variant-numeric: tabular-nums;
 }
 
 /* --- PDF / PRINT STYLES --- */
