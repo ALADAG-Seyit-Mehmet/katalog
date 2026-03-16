@@ -24,27 +24,26 @@ body {
     color: var(--dark);
     line-height: 1.6;
     overflow: hidden;
-    /* Prevents body scroll, page-flip handles it */
+    /* Prevents body scroll */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 10px;
 }
 
 /* --- Container & Controls --- */
 .catalog-wrapper {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transform: translateZ(0);
-    /* GPU acceleration */
-    will-change: transform, width;
-    /* Hint for browser optimization */
     overflow: hidden;
+    min-height: 0; /* Important for flex child shrinkage */
 }
 
 /* --- Loading Spinner --- */
@@ -87,8 +86,9 @@ body {
 }
 
 .controls {
-    position: absolute;
-    bottom: 20px;
+    flex-shrink: 0;
+    width: fit-content;
+    margin: 10px auto;
     z-index: 100;
     display: flex;
     gap: 15px;
@@ -127,9 +127,9 @@ body {
 .flip-book {
     width: 100%;
     max-width: 1000px;
-    height: auto;
-    aspect-ratio: 1000 / 707;
-    margin: 0 auto;
+    height: 100%;
+    max-height: 90vh; /* Prevents overflow */
+    margin: auto;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
     display: none;
     background-color: #333;
@@ -137,9 +137,8 @@ body {
 
 @media (max-width: 768px) {
     .flip-book {
-        aspect-ratio: 500 / 707;
-        max-width: 90vw;
-        height: auto;
+        max-width: 100%;
+        max-height: 75vh;
     }
 }
 

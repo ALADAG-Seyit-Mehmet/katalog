@@ -14,19 +14,19 @@
 <body>
 
     <!-- Yükleme Ekranı / Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay">
+    <div id="loading-overlay" class="loading-overlay" aria-hidden="true">
         <div class="spinner"></div>
         <div class="loading-text">Katalog Hazırlanıyor...</div>
     </div>
 
-    <div class="catalog-wrapper">
-        <!-- Controls -->
-        <div class="controls">
-            <button id="btn-prev" class="btn">Önceki</button>
-            <span class="page-count">Sayfa: <span id="page-current">1</span> / <span id="page-total">-</span></span>
-            <button id="btn-next" class="btn">Sonraki</button>
-        </div>
+    <!-- Controls Moved outside to fix ARIA accessibility error -->
+    <div class="controls" aria-hidden="false" aria-label="Katalog Navigasyonu">
+        <button id="btn-prev" class="btn" aria-label="Önceki Sayfa">Önceki</button>
+        <span class="page-count" aria-live="polite">Sayfa: <span id="page-current">1</span> / <span id="page-total">-</span></span>
+        <button id="btn-next" class="btn" aria-label="Sonraki Sayfa">Sonraki</button>
+    </div>
 
+    <div class="catalog-wrapper">
         <!-- Flipbook Container -->
         <div class="flip-book" id="flip-book">
 
@@ -597,9 +597,9 @@
                 usePortrait: isMobile, // Single page on mobile
                 drawShadow: true,
                 showPageCorners: true,
-                minWidth: 320,
+                minWidth: 200,
                 maxWidth: 1000,
-                minHeight: 450,
+                minHeight: 300,
                 maxHeight: 1414
             });
 

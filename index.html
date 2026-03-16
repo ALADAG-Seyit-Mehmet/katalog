@@ -13,14 +13,14 @@
 
 <body>
 
-    <div class="catalog-wrapper">
-        <!-- Controls -->
-        <div class="controls">
-            <button id="btn-prev" class="btn">Önceki</button>
-            <span class="page-count">Sayfa: <span id="page-current">1</span> / <span id="page-total">-</span></span>
-            <button id="btn-next" class="btn">Sonraki</button>
-        </div>
+    <!-- Controls Moved outside to fix ARIA accessibility error -->
+    <div class="controls" aria-hidden="false" aria-label="Katalog Navigasyonu">
+        <button id="btn-prev" class="btn" aria-label="Önceki Sayfa">Önceki</button>
+        <span class="page-count" aria-live="polite">Sayfa: <span id="page-current">1</span> / <span id="page-total">-</span></span>
+        <button id="btn-next" class="btn" aria-label="Sonraki Sayfa">Sonraki</button>
+    </div>
 
+    <div class="catalog-wrapper">
         <!-- Flipbook Container -->
         <div class="flip-book" id="flip-book">
 
@@ -538,19 +538,26 @@
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const pageFlip = new St.PageFlip(document.getElementById('flip-book'), {
+            const isMobile = window.innerWidth < 768;
+            const flipContainer = document.getElementById('flip-book');
+
+            const pageFlip = new St.PageFlip(flipContainer, {
                 width: 500, // base width
                 height: 707, // base height (A4 aspect ratio)
-                size: "fixed", // Reverted to "stretch"
-                autoSize: false, // Automatically resize the book to fit the container
+                size: "stretch", // Use stretch for responsive behavior
+                autoSize: true, 
                 flippingTime: 800,
                 maxShadowOpacity: 0.3,
                 showCover: true,
                 startPage: 0,
-                mobileScrollSupport: false,
-                usePortrait: false, // Must be false so it uses 2 page spread natively
-                drawShadow: true, // Draw shadows for pages
-                showPageCorners: true // Show page corners when flipping
+                mobileScrollSupport: true, 
+                usePortrait: isMobile, // Single page on mobile
+                drawShadow: true,
+                showPageCorners: true,
+                minWidth: 200,
+                maxWidth: 1000,
+                minHeight: 300,
+                maxHeight: 1414
             });
 
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
@@ -558,7 +565,7 @@
             document.getElementById('page-total').innerText = pageFlip.getPageCount();
 
             pageFlip.on('flip', (e) => {
-                const currentPage = pageFlip.getCurrentPageIndex() + 1; // Correct index
+                const currentPage = pageFlip.getCurrentPageIndex() + 1;
                 const totalPages = pageFlip.getPageCount();
 
                 if (currentPage === 1) {
@@ -566,10 +573,13 @@
                 } else if (currentPage === totalPages) {
                     document.getElementById('page-current').innerText = totalPages;
                 } else {
-                    // Show range for spreads (e.g. 2 / 3)
-                    const leftPage = currentPage;
-                    const rightPage = Math.min(currentPage + 1, totalPages);
-                    document.getElementById('page-current').innerText = `${leftPage} / ${rightPage}`;
+                    if (isMobile) {
+                        document.getElementById('page-current').innerText = currentPage;
+                    } else {
+                        const leftPage = currentPage;
+                        const rightPage = Math.min(currentPage + 1, totalPages);
+                        document.getElementById('page-current').innerText = `${leftPage} / ${rightPage}`;
+                    }
                 }
             });
 
