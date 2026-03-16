@@ -1,0 +1,821 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
+
+:root {
+    --gold: #d4af37;
+    --dark: #121212;
+    --darker: #0a0a0a;
+    --light: #f9f9f9;
+    --gray: #666;
+    --border: #ddd;
+    --transition: all 0.4s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--darker);
+    color: var(--dark);
+    line-height: 1.6;
+    overflow: hidden;
+    /* Prevents body scroll, page-flip handles it */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Container & Controls --- */
+.catalog-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(0);
+    /* GPU acceleration */
+    will-change: transform, width;
+    /* Hint for browser optimization */
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+}
+
+.btn {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn:hover {
+    background: var(--gold);
+    color: var(--darker);
+}
+
+.page-count {
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* --- Flipbook Base --- */
+.flip-book {
+    width: 1000px;
+    /* Fixed spread width (500px + 500px) */
+    height: 707px;
+    /* Fixed height */
+    margin: 40px auto;
+    /* Centered with vertical spacing */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    display: none;
+    /* Managed by JS flipbook load */
+}
+
+/* St.PageFlip internal parent stabilization */
+.stf__parent {
+    margin: auto !important;
+}
+
+.page {
+    background-color: #ffffff;
+    color: var(--dark);
+    border: none;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    width: 100%;
+    height: 100%;
+}
+
+/* Book binding effect - Optimized for professional look */
+.page:nth-child(odd) {
+    box-shadow: inset 10px 0 15px rgba(0, 0, 0, 0.03);
+}
+
+.page:nth-child(even) {
+    box-shadow: inset -10px 0 15px rgba(0, 0, 0, 0.03);
+}
+
+.page-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* --- Typography --- */
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Playfair Display', serif;
+}
+
+.eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.print-bg {
+    display: none;
+}
+
+/* --- Cover Pages --- */
+.page-cover {
+    background-color: transparent;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('kapak_arkaplan.png');
+    background-size: cover;
+    background-position: center;
+    color: var(--gold);
+    border: none;
+}
+
+.page-cover::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    pointer-events: none;
+}
+
+.cover-inner,
+.back-cover-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.cover-inner h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    margin-bottom: 10px;
+    line-height: 1.1;
+}
+
+.subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    font-weight: 300;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+.cover-bottom {
+    position: absolute;
+    bottom: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #888;
+}
+
+.series-desc-en {
+    font-size: 0.82em;
+    color: #777;
+    margin-top: 6px;
+    line-height: 1.4;
+    display: block;
+}
+
+.subtitle-en {
+    font-size: 0.75em;
+    color: #666;
+    letter-spacing: 3px;
+    margin-top: -15px; /* Pull closer to Turkish subtitle */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.cover-bottom-en {
+    font-size: 0.75em;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+
+/* --- Logo Integration (Clean PNG Style) --- */
+.logo-crop {
+    width: 250px; 
+    height: 100px;
+    overflow: hidden;
+    margin: 0 auto 10px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%); /* Subtle glow to lift icon from dark bg */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.logo-crop img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    /* Boosted brightness and contrast for better visibility on dark covers */
+    filter: brightness(1.4) contrast(1.3) saturate(1.2); 
+}
+
+/* Specific styling for front cover focus */
+.front-logo {
+    width: 320px;
+    height: 140px;
+    margin-bottom: 5px;
+}
+
+.back-logo {
+    width: 200px;
+    height: 80px;
+}
+
+/* --- Inside Cover (Pattern) --- */
+.page-inside-cover .page-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Context for absolute children */
+}
+
+.brand-showcase {
+    position: relative;
+    z-index: 2;
+    width: 65%;
+    max-width: 350px;
+    mix-blend-mode: multiply;
+    filter: brightness(1.1) contrast(1.1);
+    opacity: 0.95;
+}
+
+.pattern-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.4;
+    z-index: 1;
+}
+
+/* --- Intro / TOC Page --- */
+.content-inner {
+    padding: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.intro-page h2 {
+    font-size: 2rem;
+    color: var(--dark);
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.toc-list {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.toc-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toc-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.toc-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.toc-line {
+    height: 1px;
+    background-color: var(--border);
+    margin: 5px 0;
+    width: 50%;
+}
+
+.intro-text {
+    font-style: italic;
+    color: var(--gray);
+    text-align: center;
+    margin-top: auto;
+    font-size: 0.95rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+/* --- Full Bleed Image / Spread Logic --- */
+.bleed {
+    padding: 0;
+}
+
+/* Updated logic for doing full bleed spread across 2 pages using background */
+.page-spread-left .page-content,
+.page-spread-right .page-content {
+    background-size: 200vw 100vh;
+    /* Make the background double the viewport width to behave like a true spread, fallback sizes below */
+    background-size: 200% 100%;
+    /* Stretch exactly to double the page size */
+    background-repeat: no-repeat;
+    background-position: left center;
+    width: 100%;
+    height: 100%;
+}
+
+.page-spread-right .page-content {
+    background-position: right center;
+}
+
+/* Overlay Styling for Text on Image */
+.hero-text-overlay {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    /* Background for readability */
+    /* background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%); */
+}
+
+/* Since the image is spread across two panels, but the right panel is where the caption usually goes */
+.bottom-right {
+    bottom: 30px;
+    right: 30px;
+    text-align: right;
+}
+
+.hero-text-overlay h3 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    line-height: 1;
+}
+
+/* --- Info Text Page --- */
+.info-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+}
+
+.series-badge {
+    display: inline-block;
+    background-color: var(--dark);
+    color: var(--gold);
+    padding: 5px 15px;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.series-title {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.series-desc {
+    color: var(--gray);
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+}
+
+.series-specs {
+    list-style: none;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.series-specs li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.series-specs span {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* --- Multi Images Page --- */
+.multi-image-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    height: 100%;
+}
+
+.multi-image-layout figure {
+    position: relative;
+    flex: 1;
+    /* Takes half height */
+    overflow: hidden;
+    margin: 0;
+}
+
+.multi-image-layout img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.multi-image-layout img:hover {
+    transform: scale(1.05);
+}
+
+/* Right aligned text variations */
+.text-right {
+    text-align: right;
+}
+
+.align-right {
+    justify-content: flex-end;
+}
+
+.text-right .series-badge {
+    margin-left: auto;
+}
+
+.contact-info-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.contact-text {
+    text-align: right;
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+    padding-right: 30px;
+}
+
+.contact-text p {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #eee;
+}
+
+.contact-text strong {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.qr-code-premium {
+    width: 180px;
+    height: 180px;
+    border: 1px solid var(--gold);
+    padding: 8px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.qr-label {
+    font-size: 0.7rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Back Cover --- */
+.back-cover-inner h2 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    color: var(--gold);
+}
+
+.tagline {
+    font-style: italic;
+    color: #ccc;
+    margin-bottom: 50px;
+    font-family: 'Playfair Display', serif;
+}
+
+.contact-info {
+    font-size: 0.9rem;
+    color: #eee;
+    line-height: 1.8;
+}
+
+.contact-info p {
+    margin-bottom: 20px;
+}
+
+.legal {
+    margin-top: 50px;
+    font-size: 0.75rem;
+    color: #666;
+    letter-spacing: 1px;
+}
+
+/* --- Technical Specs in Magazine --- */
+.technical-specs {
+    margin-top: 15px;
+    padding: 12px;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    background-color: #ffffff;
+    width: 100%;
+    /* Take full width of the info column */
+}
+
+.spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.spec-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.spec-label {
+    font-weight: 900;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+.spec-value {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #000;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- PDF / PRINT STYLES --- */
+@media print {
+    @page {
+        margin: 0;
+        size: landscape;
+        /* We print in landscape to fit two portrait pages side-by-side */
+    }
+
+    body {
+        overflow: visible !important;
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .catalog-wrapper {
+        height: auto !important;
+        position: static !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Hide Controls */
+    .controls {
+        display: none !important;
+    }
+
+    /* Override Flipbook Container */
+    .flip-book {
+        display: block !important;
+        /* Block instead of grid for reliable breaking */
+        width: 100% !important;
+        height: auto !important;
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Base Page Styling for Print */
+    .page {
+        display: block !important;
+        float: left !important;
+        width: 50% !important;
+        /* Half of the landscape sheet */
+        height: 100vh !important;
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* THE LOGIC: 1 alone (right), then 2/3, 4/5 ... */
+
+    /* Page 1: Force to the right half */
+    .page:nth-child(1) {
+        float: right !important;
+        margin-left: 0 !important;
+        clear: both !important;
+        page-break-after: always !important;
+    }
+
+    /* All subsequent Left pages (even: 2, 4, 6...) */
+    .page:nth-child(even):not(:first-child) {
+        margin-left: 0 !important;
+        clear: both !important;
+    }
+
+    /* All subsequent Right pages (odd: 3, 5, 7...) */
+    .page:nth-child(odd):not(:first-child) {
+        page-break-after: always !important;
+    }
+
+    .page-content {
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: white !important;
+    }
+
+    /* Ensure backgrounds show through on covers */
+    .page-cover .page-content,
+    .page-cover-bottom .page-content {
+        background-color: transparent !important;
+    }
+
+    .print-bg {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        z-index: 1 !important;
+    }
+
+    .page-cover,
+    .page-cover-bottom,
+    .page-content.dark-bg {
+        background-color: #1a1a1a !important;
+        color: #f1f1f1 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .page-cover .page-content,
+    .page-cover-bottom .page-content {
+        position: relative !important;
+        z-index: 2 !important;
+        /* Content above background */
+        background: transparent !important;
+        background-image: none !important;
+    }
+
+    .page-content.dark-bg {
+        background-image: none !important;
+    }
+
+    .page-cover .tagline,
+    .page-cover-bottom .tagline {
+        color: #d4af37 !important;
+        /* Force gold color for tagline */
+    }
+
+    /* Multi-image layouts (where resim has to be centered) */
+    .page:not(.bleed) .page-content:has(.multi-image-layout) {
+        align-items: center !important;
+        padding-top: 0 !important;
+    }
+
+    /* Regular images scaling: Prevent Cropping and keep them centered */
+    .page-content[style*="background-image"] {
+        align-items: center !important;
+        padding-top: 0 !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+    }
+
+    /* Spread backgrounds: Maintain continuity */
+    .page-spread-left .page-content,
+    .page-spread-right .page-content {
+        background-size: 200% 100% !important;
+        /* Stretch to cover full spread width */
+        background-repeat: no-repeat !important;
+    }
+
+    .page-spread-left .page-content {
+        background-position: left center !important;
+    }
+
+    .page-spread-right .page-content {
+        background-position: right center !important;
+    }
+
+    .pattern-bg {
+        display: none !important;
+    }
+
+    /* Multi-image and info layouts */
+    .multi-image-layout,
+    .info-layout {
+        width: 100% !important;
+        padding: 40px !important;
+    }
+
+    /* Technical specs visibility */
+    .technical-specs {
+        margin-top: 30px !important;
+        width: 100% !important;
+        border: 2px solid #000 !important;
+    }
+
+    .series-title-huge {
+        font-size: 2.5rem !important;
+        opacity: 0.2 !important;
+    }
+}
+
+/* Responsive constraints just for the wrapper */
+@media (max-width: 768px) {
+    .controls {
+        bottom: 10px;
+        padding: 8px 15px;
+    }
+}
