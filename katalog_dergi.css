@@ -7,15 +7,21 @@
     --light: #f9f9f9;
     --gray: #666;
     --border: #ddd;
-    --transition: all 0.4s ease;
-    --book-width: 500px;
-    --book-height: 707px;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Fluid Typography - Mobile first */
+    --fs-base: clamp(0.875rem, 0.8rem + 0.375vw, 1.125rem);
+    --fs-h1: clamp(2.5rem, 8vw, 4.5rem);
+    --fs-h2: clamp(1.75rem, 5vw, 3rem);
+    --fs-h3: clamp(1.25rem, 4vw, 2.5rem);
+    --fs-eyebrow: clamp(0.7rem, 2vw, 0.9rem);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -23,17 +29,19 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    position: fixed; /* Prevents scroll bounce on mobile */
+    overflow: hidden; /* Controlled by catalog logic */
+    position: fixed;
+    background-color: var(--darker);
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: var(--darker);
     color: var(--dark);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
+    font-size: var(--fs-base);
 }
 
 /* --- Container & Controls --- */
@@ -48,73 +56,70 @@ body {
     justify-content: center;
     overflow: hidden;
     min-height: 0;
-    background-color: var(--darker);
 }
 
 /* --- Loading Spinner --- */
 .loading-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: var(--darker);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, visibility 0.5s;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
+    width: min(50px, 12vw);
+    height: min(50px, 12vw);
     border: 3px solid rgba(212, 175, 55, 0.1);
     border-top: 3px solid var(--gold);
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to { transform: rotate(360deg); }
 }
 
 .loading-text {
     color: var(--gold);
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 2px;
-    font-size: 0.8rem;
+    letter-spacing: 0.2rem;
+    font-size: var(--fs-eyebrow);
     text-transform: uppercase;
 }
 
 .controls {
     flex-shrink: 0;
-    width: fit-content;
-    margin: 10px auto;
+    width: max-content;
+    max-width: 90%;
+    margin: 0.75rem auto;
     z-index: 100;
     display: flex;
-    gap: 15px;
+    gap: 1rem;
     align-items: center;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 20px;
-    border-radius: 30px;
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .btn {
     background: transparent;
     color: var(--gold);
     border: 1px solid var(--gold);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 0.6rem 1.2rem; /* Larger touch area */
+    min-height: 44px; /* A11y requirement */
+    border-radius: 1.5rem;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     font-size: 0.9rem;
-    font-weight: 500;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -124,19 +129,16 @@ body {
 
 .page-count {
     color: #fff;
-    font-size: 0.9rem;
-    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
 /* --- Flipbook Base --- */
 .flip-book {
     width: 100%;
-    max-width: 1000px;
     height: 100%;
-    /* No max-height here, let catalog-wrapper handle constraints */
     margin: auto;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-    /* Changed from display: none to visibility to ensure measurement is possible */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     visibility: hidden;
     opacity: 0;
     background-color: #1a1a1a;
@@ -148,16 +150,20 @@ body {
     display: block !important;
 }
 
-@media (max-width: 768px) {
+/* Mobile defaults for flipbook */
+@media (max-width: 1023px) {
     .flip-book {
-        max-width: 100%;
-        height: 70vh; /* Explicit mobile height to avoid slivers */
+        max-width: 100vw;
+        height: 75vh !important; /* Ensure it fits with controls */
     }
 }
 
-/* St.PageFlip internal parent stabilization */
-.stf__parent {
-    margin: auto !important;
+/* Desktop sizing */
+@media (min-width: 1024px) {
+    .flip-book {
+        max-width: 1200px;
+        height: 85vh !important;
+    }
 }
 
 .page {
@@ -174,13 +180,13 @@ body {
     height: 100%;
 }
 
-/* Book binding effect - Optimized for professional look */
+/* Book binding effect */
 .page:nth-child(odd) {
-    box-shadow: inset 10px 0 15px rgba(0, 0, 0, 0.03);
+    box-shadow: inset 15px 0 25px rgba(0, 0, 0, 0.05);
 }
 
 .page:nth-child(even) {
-    box-shadow: inset -10px 0 15px rgba(0, 0, 0, 0.03);
+    box-shadow: inset -15px 0 25px rgba(0, 0, 0, 0.05);
 }
 
 .page-content {
@@ -189,48 +195,35 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
+    padding: clamp(1rem, 4vw, 3rem); /* Responsive padding */
 }
 
 /* --- Typography --- */
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+    color: inherit;
 }
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
 
 .eyebrow {
-    font-size: 0.8rem;
-    letter-spacing: 3px;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.25rem;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
     display: block;
-}
-
-.print-bg {
-    display: none;
+    font-weight: 600;
 }
 
 /* --- Cover Pages --- */
 .page-cover {
-    background-color: transparent;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('kapak_arkaplan.png');
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('kapak_arkaplan.png') center/cover no-base;
     color: var(--gold);
-    border: none;
-}
-
-.page-cover::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    pointer-events: none;
+    padding: 0; /* Cover handles its own padding */
 }
 
 .cover-inner,
@@ -241,58 +234,47 @@ h4 {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px;
+    padding: clamp(1.5rem, 8vw, 4rem);
 }
 
 .cover-inner h1 {
-    font-size: 3.5rem;
     font-weight: 700;
-    letter-spacing: 5px;
-    margin-bottom: 10px;
-    line-height: 1.1;
+    letter-spacing: 0.4rem;
+    margin-bottom: 0.5rem;
 }
 
 .subtitle {
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
-    font-weight: 300;
-    color: #ccc;
-    margin-bottom: 40px;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    letter-spacing: 0.15rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+}
+
+.subtitle-en {
+    font-size: 0.7em;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.2rem;
+    margin-top: -1.5rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
 }
 
 .cover-bottom {
     position: absolute;
-    bottom: 40px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    color: #888;
-}
-
-.series-desc-en {
-    font-size: 0.82em;
-    color: #777;
-    margin-top: 6px;
-    line-height: 1.4;
-    display: block;
-}
-
-.subtitle-en {
-    font-size: 0.75em;
-    color: #666;
-    letter-spacing: 3px;
-    margin-top: -15px; /* Pull closer to Turkish subtitle */
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    font-weight: 400;
+    bottom: clamp(1rem, 5vw, 3rem);
+    width: 80%;
+    font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .cover-bottom-en {
-    font-size: 0.75em;
-    color: #555;
-    margin-top: 4px;
-    letter-spacing: 1px;
+    display: block;
+    font-size: 0.8em;
+    margin-top: 0.25rem;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 /* --- Logo Integration (Clean PNG Style) --- */
@@ -317,77 +299,85 @@ h4 {
     filter: brightness(1.4) contrast(1.3) saturate(1.2); 
 }
 
-/* Specific styling for front cover focus */
+/* --- Logo Integration --- */
+.logo-crop {
+    width: min(250px, 60%); 
+    aspect-ratio: 2.5/1;
+    overflow: hidden;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    filter: brightness(1.2) contrast(1.1);
+}
+
+.logo-crop img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .front-logo {
-    width: 320px;
-    height: 140px;
-    margin-bottom: 5px;
+    width: min(320px, 75%);
+    margin-bottom: 1rem;
 }
 
 .back-logo {
-    width: 200px;
-    height: 80px;
+    width: min(200px, 50%);
 }
 
-/* --- Inside Cover (Pattern) --- */
+/* --- Inside Cover --- */
 .page-inside-cover .page-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Context for absolute children */
 }
 
 .brand-showcase {
     position: relative;
     z-index: 2;
-    width: 65%;
-    max-width: 350px;
+    width: min(350px, 70%);
+    aspect-ratio: 1;
     mix-blend-mode: multiply;
-    filter: brightness(1.1) contrast(1.1);
-    opacity: 0.95;
+    opacity: 0.9;
 }
 
 .pattern-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 20px 20px;
-    opacity: 0.4;
+    background-size: 2rem 2rem;
+    opacity: 0.3;
     z-index: 1;
 }
 
 /* --- Intro / TOC Page --- */
 .content-inner {
-    padding: 40px;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .intro-page h2 {
-    font-size: 2rem;
-    color: var(--dark);
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
     border-bottom: 2px solid var(--gold);
-    padding-bottom: 10px;
-    display: inline-block;
+    padding-bottom: 0.5rem;
+    align-self: flex-start;
 }
 
 .toc-list {
-    flex-grow: 1;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
+    gap: clamp(1rem, 2vh, 2rem);
 }
 
 .toc-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 1rem;
 }
 
 .toc-num {
@@ -399,17 +389,18 @@ h4 {
 
 .toc-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    letter-spacing: 0.05rem;
     font-weight: 500;
     text-transform: uppercase;
 }
 
 .toc-line {
+    flex: 1;
     height: 1px;
     background-color: var(--border);
-    margin: 5px 0;
-    width: 50%;
+    margin: 0 1rem;
+    opacity: 0.5;
 }
 
 .intro-text {
@@ -417,9 +408,9 @@ h4 {
     color: var(--gray);
     text-align: center;
     margin-top: auto;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     border-top: 1px solid var(--border);
-    padding-top: 20px;
+    padding-top: 1.5rem;
 }
 
 /* --- Full Bleed Image / Spread Logic --- */
@@ -427,13 +418,9 @@ h4 {
     padding: 0;
 }
 
-/* Updated logic for doing full bleed spread across 2 pages using background */
 .page-spread-left .page-content,
 .page-spread-right .page-content {
-    background-size: 200vw 100vh;
-    /* Make the background double the viewport width to behave like a true spread, fallback sizes below */
     background-size: 200% 100%;
-    /* Stretch exactly to double the page size */
     background-repeat: no-repeat;
     background-position: left center;
     width: 100%;
@@ -444,29 +431,25 @@ h4 {
     background-position: right center;
 }
 
-/* Overlay Styling for Text on Image */
 .hero-text-overlay {
     position: absolute;
     z-index: 10;
     width: 100%;
-    /* Background for readability */
-    /* background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%); */
 }
 
-/* Since the image is spread across two panels, but the right panel is where the caption usually goes */
 .bottom-right {
-    bottom: 30px;
-    right: 30px;
+    bottom: clamp(1.5rem, 5vw, 3rem);
+    right: clamp(1.5rem, 5vw, 3rem);
     text-align: right;
 }
 
 .hero-text-overlay h3 {
     font-family: 'Great Vibes', cursive;
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 10vw, 5rem);
     color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
     margin: 0;
-    line-height: 1;
+    line-height: 0.8;
 }
 
 /* --- Info Text Page --- */
@@ -474,41 +457,44 @@ h4 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 50px;
+    height: 100%;
 }
 
 .series-badge {
     display: inline-block;
     background-color: var(--dark);
     color: var(--gold);
-    padding: 5px 15px;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
+    padding: 0.3rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15rem;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    width: fit-content;
 }
 
 .series-title {
-    font-size: 2.8rem;
-    margin-bottom: 20px;
+    font-size: var(--fs-h2);
+    margin-bottom: 1rem;
     line-height: 1.1;
+    color: var(--dark);
 }
 
 .series-desc {
     color: var(--gray);
-    margin-bottom: 30px;
-    font-size: 1.05rem;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    max-width: 90%;
 }
 
 .series-specs {
     list-style: none;
     border-top: 1px solid var(--border);
-    padding-top: 20px;
+    padding-top: 1.5rem;
 }
 
 .series-specs li {
-    margin-bottom: 10px;
-    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
     display: flex;
     justify-content: space-between;
 }
@@ -522,145 +508,127 @@ h4 {
 .multi-image-layout {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px;
+    gap: 1rem;
     height: 100%;
 }
 
 .multi-image-layout figure {
     position: relative;
     flex: 1;
-    /* Takes half height */
     overflow: hidden;
-    margin: 0;
 }
 
 .multi-image-layout img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .multi-image-layout img:hover {
     transform: scale(1.05);
 }
 
-/* Right aligned text variations */
-.text-right {
-    text-align: right;
-}
-
-.align-right {
-    justify-content: flex-end;
-}
-
-.text-right .series-badge {
-    margin-left: auto;
-}
-
+/* --- Contact & QR Sections --- */
 .contact-info-grid {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 40px;
-    margin-top: 20px;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .contact-info-grid {
+        flex-direction: row;
+        justify-content: center;
+        gap: 2.5rem;
+    }
 }
 
 .contact-text {
-    text-align: right;
-    border-right: 1px solid rgba(212, 175, 55, 0.3);
-    padding-right: 30px;
+    text-align: center;
 }
 
-.contact-text p {
-    margin-bottom: 5px;
-    font-size: 1rem;
-    color: #eee;
+@media (min-width: 768px) {
+    .contact-text {
+        text-align: right;
+        border-right: 1px solid rgba(212, 175, 55, 0.3);
+        padding-right: 2rem;
+    }
 }
 
 .contact-text strong {
     color: var(--gold);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.1rem;
     font-size: 1.1rem;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0.5rem;
 }
 
 .qr-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
 }
 
 .qr-code-premium {
-    width: 180px;
-    height: 180px;
+    width: min(180px, 40vw);
+    aspect-ratio: 1;
     border: 1px solid var(--gold);
-    padding: 8px;
+    padding: 0.5rem;
     background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
-.qr-label {
-    font-size: 0.7rem;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    border-radius: 0.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* --- Back Cover --- */
 .back-cover-inner h2 {
-    font-size: 2.5rem;
-    margin-bottom: 5px;
+    font-size: var(--fs-h2);
+    margin-bottom: 0.5rem;
     color: var(--gold);
 }
 
 .tagline {
     font-style: italic;
-    color: #ccc;
-    margin-bottom: 50px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 3rem;
     font-family: 'Playfair Display', serif;
 }
 
 .contact-info {
     font-size: 0.9rem;
-    color: #eee;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.8;
 }
 
-.contact-info p {
-    margin-bottom: 20px;
-}
-
 .legal {
-    margin-top: 50px;
-    font-size: 0.75rem;
-    color: #666;
-    letter-spacing: 1px;
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.05rem;
+    padding-top: 2rem;
 }
 
-/* --- Technical Specs in Magazine --- */
+/* --- Technical Specs --- */
 .technical-specs {
-    margin-top: 15px;
-    padding: 12px;
+    margin-top: 1rem;
+    padding: 1rem;
     border-top: 2px solid #000;
     border-bottom: 2px solid #000;
-    background-color: #ffffff;
+    background-color: #fff;
     width: 100%;
-    /* Take full width of the info column */
 }
 
 .spec-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.25rem;
 }
 
 .spec-row:last-child {
@@ -669,18 +637,16 @@ h4 {
 }
 
 .spec-label {
-    font-weight: 900;
-    font-size: 0.85rem;
+    font-weight: 800;
+    font-size: 0.75rem;
     text-transform: uppercase;
     color: #000;
-    letter-spacing: 1px;
 }
 
 .spec-value {
-    font-weight: 800;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
     color: #000;
-    font-variant-numeric: tabular-nums;
 }
 
 /* --- PDF / PRINT STYLES --- */
