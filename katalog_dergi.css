@@ -220,7 +220,14 @@ body {
     }
 }
 
-/* St.PageFlip internal parent stabilization */
+/* --- Spacer Pages --- */
+.page-spacer {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
 .stf__parent {
     margin: auto !important;
 }
