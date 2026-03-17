@@ -38,11 +38,9 @@
     <div class="catalog-wrapper">
         <!-- Flipbook Container -->
         <div class="flip-book" id="flip-book">
-            <!-- Starting spacer to align cover to the right -->
-            <div class="page page-spacer" data-density="hard"></div>
 
             <!-- Page 1: Cover -->
-            <div class="page page-cover page-cover-top" data-density="hard">
+            <div class="page bleed page-cover page-cover-top" data-density="hard">
                 <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
                 <div class="page-content">
                     <div class="cover-inner">
@@ -296,9 +294,10 @@
                         <h2 class="series-title">GÖKSU</h2>
                         <p class="series-desc">Nordik minimalizmin cesur renk paletleriyle füzyonu. Bordo ve kremin
                             cesur karışımı, masif meşe ayaklar ve cam detaylarla mükemmel bir denge sağladı.</p>
+                        <p class="series-desc-en">A fusion of Nordic minimalism with bold color palettes. A bold mix of burgundy and cream, achieving a perfect balance with solid oak legs and glass details.</p>
                         <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> İPEK</li>
-                            <li><span>Konsept / Concept:</span> Soft Kadife</li>
+                            <li><span>Kumaş / Fabric:</span> İPEK / SILK</li>
+                            <li><span>Konsept / Concept:</span> Soft Kadife / Soft Velvet</li>
                         </ul>
                         <div class="technical-specs">
                             <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span
@@ -349,9 +348,10 @@
                         <p class="series-desc">Modern hatların ve geniş oturum alanlarının ustaca birleşimi. Aile boyu
                             konfor için tasarlanan ekstra geniş yapısı ve fonksiyonel özellikleriyle yaşam alanınızın
                             yeni odak noktası.</p>
+                        <p class="series-desc-en">A masterful blend of modern lines and spacious seating. Its extra-wide structure and functional features, designed for family-sized comfort, make it the new centerpiece of your living space.</p>
                         <ul class="series-specs">
                             <li><span>Kumaş / Fabric:</span> MİRZA</li>
-                            <li><span>Konsept / Concept:</span> Şehirli Modern</li>
+                            <li><span>Konsept / Concept:</span> Şehirli Modern / Urban Modern</li>
                         </ul>
                         <div class="technical-specs">
                             <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span
@@ -555,7 +555,7 @@
             <!-- ============================== OUTRO ============================== -->
 
             <!-- Page 38: Back Cover -->
-            <div class="page page-cover page-cover-bottom" data-density="hard">
+            <div class="page bleed page-cover page-cover-bottom" data-density="hard">
                 <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
                 <div class="page-content">
                     <div class="back-cover-inner">
@@ -584,8 +584,6 @@
                 </div>
             </div>
 
-            <!-- Ending spacer to align back cover to the left -->
-            <div class="page page-spacer" data-density="hard"></div>
         </div> <!-- /flip-book -->
     </div>
 
@@ -598,24 +596,19 @@
             const loadingOverlay = document.getElementById('loading-overlay');
 
             const pageFlip = new St.PageFlip(flipContainer, {
-                width: 500, // base width
-                height: 707, // base height
-                size: "stretch", // Stretch to fit the container precisely
-                autoSize: true, 
+                width: 500, // A4 ratio base width
+                height: 707, // A4 ratio base height
+                size: "fixed", // Fixed size for print consistency
+                autoSize: false,
                 flippingTime: 800,
-                maxShadowOpacity: 0.3,
+                maxShadowOpacity: 0.25,
                 showCover: true,
                 startPage: 0,
                 mobileScrollSupport: true,
-                usePortrait: isMobile,
+                usePortrait: false, // Force spread mode on desktop for professional look
                 drawShadow: true,
                 showPageCorners: true,
-                minWidth: 250,
-                maxWidth: 2000,
-                minHeight: 400,
-                maxHeight: 2533,
-                swipeDistance: 30, // Easier swiping on mobile
-                clickEventForward: true // Fix for nested buttons
+                clickEventForward: true
             });
 
             // Initial load

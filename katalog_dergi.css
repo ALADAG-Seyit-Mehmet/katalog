@@ -10,6 +10,13 @@
     --transition: all 0.4s ease;
     --book-width: 500px;
     --book-height: 707px;
+    
+    /* Print Standard Margins */
+    --bleed: 3mm;
+    --margin-inner: 22mm;
+    --margin-outer: 12mm;
+    --margin-top: 12mm;
+    --margin-bottom: 18mm;
 }
 
 * {
@@ -220,14 +227,7 @@ body {
     }
 }
 
-/* --- Spacer Pages --- */
-.page-spacer {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}
+/* St.PageFlip internal parent stabilization */
 .stf__parent {
     margin: auto !important;
 }
@@ -255,12 +255,39 @@ body {
     box-shadow: inset -10px 0 15px rgba(0, 0, 0, 0.03);
 }
 
+/* Base Layout Logic */
 .page-content {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Digital Flipbook Standard Padding (Keep it clean for screen) */
+.info-layout, .intro-page, .content-inner {
+    padding: 40px 50px !important;
+}
+
+.multi-image-layout {
+    padding: 20px !important;
+}
+
+/* Spread Background Logic */
+.page-spread-left .page-content,
+.page-spread-right .page-content {
+    background-size: 200% 100% !important;
+    background-repeat: no-repeat !important;
+}
+
+.page-spread-left .page-content {
+    background-position: left center !important;
+}
+
+.page-spread-right .page-content {
+    background-position: right center !important;
 }
 
 /* --- Typography --- */
@@ -758,9 +785,8 @@ h4 {
 /* --- PDF / PRINT STYLES --- */
 @media print {
     @page {
+        size: 210mm 297mm; /* Standard A4 Portrait */
         margin: 0;
-        size: landscape;
-        /* We print in landscape to fit two portrait pages side-by-side */
     }
 
     body {
@@ -772,83 +798,60 @@ h4 {
         print-color-adjust: exact !important;
     }
 
-    .catalog-wrapper {
-        height: auto !important;
-        position: static !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+    .catalog-wrapper, 
+    .catalog-wrapper * {
+        overflow: visible !important;
     }
 
-    /* Hide Controls */
-    .controls {
+    .controls, .mobile-warning, .loading-overlay {
         display: none !important;
     }
 
-    /* Override Flipbook Container */
     .flip-book {
         display: block !important;
-        /* Block instead of grid for reliable breaking */
         width: 100% !important;
         height: auto !important;
         background: transparent !important;
         margin: 0 !important;
         padding: 0 !important;
+        box-shadow: none !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
-    /* Base Page Styling for Print */
     .page {
         display: block !important;
-        float: left !important;
-        width: 50% !important;
-        /* Half of the landscape sheet */
-        height: 100vh !important;
+        width: 210mm !important;
+        height: 297mm !important;
         position: relative !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
-        box-shadow: none !important;
-        border: none !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
         margin: 0 !important;
         padding: 0 !important;
-        page-break-inside: avoid !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        box-shadow: none !important;
+        background: white !important;
     }
 
-    /* THE LOGIC: 1 alone (right), then 2/3, 4/5 ... */
-
-    /* Page 1: Force to the right half */
-    .page:nth-child(1) {
-        float: right !important;
-        margin-left: 0 !important;
-        clear: both !important;
-        page-break-after: always !important;
+    /* Apply Professional Margins ONLY for print */
+    .page:not(.bleed):nth-child(even) .page-content {
+        padding-left: var(--margin-inner) !important;
+        padding-right: var(--margin-outer) !important;
+        padding-top: var(--margin-top) !important;
+        padding-bottom: var(--margin-bottom) !important;
     }
 
-    /* All subsequent Left pages (even: 2, 4, 6...) */
-    .page:nth-child(even):not(:first-child) {
-        margin-left: 0 !important;
-        clear: both !important;
+    .page:not(.bleed):nth-child(odd) .page-content {
+        padding-left: var(--margin-outer) !important;
+        padding-right: var(--margin-inner) !important;
+        padding-top: var(--margin-top) !important;
+        padding-bottom: var(--margin-bottom) !important;
     }
 
-    /* All subsequent Right pages (odd: 3, 5, 7...) */
-    .page:nth-child(odd):not(:first-child) {
-        page-break-after: always !important;
-    }
-
-    .page-content {
-        height: 100% !important;
-        width: 100% !important;
+    .page.bleed .page-content {
+        padding: 0 !important;
         margin: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background-color: white !important;
-    }
-
-    /* Ensure backgrounds show through on covers */
-    .page-cover .page-content,
-    .page-cover-bottom .page-content {
-        background-color: transparent !important;
     }
 
     .print-bg {
@@ -859,89 +862,18 @@ h4 {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        z-index: 1 !important;
+        z-index: 0 !important;
     }
 
-    .page-cover,
-    .page-cover-bottom,
-    .page-content.dark-bg {
-        background-color: #1a1a1a !important;
-        color: #f1f1f1 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    .page-cover .page-content,
-    .page-cover-bottom .page-content {
-        position: relative !important;
-        z-index: 2 !important;
-        /* Content above background */
-        background: transparent !important;
-        background-image: none !important;
-    }
-
-    .page-content.dark-bg {
-        background-image: none !important;
-    }
-
-    .page-cover .tagline,
-    .page-cover-bottom .tagline {
-        color: #d4af37 !important;
-        /* Force gold color for tagline */
-    }
-
-    /* Multi-image layouts (where resim has to be centered) */
-    .page:not(.bleed) .page-content:has(.multi-image-layout) {
-        align-items: center !important;
-        padding-top: 0 !important;
-    }
-
-    /* Regular images scaling: Prevent Cropping and keep them centered */
-    .page-content[style*="background-image"] {
-        align-items: center !important;
-        padding-top: 0 !important;
-        background-size: contain !important;
-        background-repeat: no-repeat !important;
-        background-position: center !important;
-    }
-
-    /* Spread backgrounds: Maintain continuity */
-    .page-spread-left .page-content,
-    .page-spread-right .page-content {
-        background-size: 200% 100% !important;
-        /* Stretch to cover full spread width */
-        background-repeat: no-repeat !important;
-    }
-
-    .page-spread-left .page-content {
-        background-position: left center !important;
-    }
-
-    .page-spread-right .page-content {
-        background-position: right center !important;
-    }
-
-    .pattern-bg {
-        display: none !important;
-    }
-
-    /* Multi-image and info layouts */
-    .multi-image-layout,
-    .info-layout {
-        width: 100% !important;
+    /* Content styling refresh for print */
+    .content-inner, .info-layout {
         padding: 40px !important;
     }
 
-    /* Technical specs visibility */
-    .technical-specs {
-        margin-top: 30px !important;
-        width: 100% !important;
-        border: 2px solid #000 !important;
-    }
-
-    .series-title-huge {
-        font-size: 2.5rem !important;
-        opacity: 0.2 !important;
+    /* Ensure backgrounds and graphics render */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
 
