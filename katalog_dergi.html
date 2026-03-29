@@ -35,12 +35,20 @@
         <button id="btn-next" class="btn" aria-label="Sonraki Sayfa">Sonraki</button>
     </div>
 
+    <!-- Print Only Vertical Container -->
+    <div id="print-container"></div>
+
     <div class="catalog-wrapper">
         <!-- Flipbook Container -->
         <div class="flip-book" id="flip-book">
 
+            <!-- DOM Parity Dummy Page (Left) -->
+            <div class="page" style="background-color: #1a1a1a; box-shadow: none;">
+                <div class="page-content" style="background-color: #1a1a1a; box-shadow: none;"></div>
+            </div>
+
             <!-- Page 1: Cover -->
-            <div class="page bleed page-cover page-cover-top" data-density="hard">
+            <div class="page bleed page-cover page-cover-top" data-density="soft">
                 <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
                 <div class="page-content">
                     <div class="cover-inner">
@@ -88,6 +96,8 @@
                             </div>
                             <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">KEHRİBAR
                                     V2</span>
+                            </div>
+                            <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">SUNA Serisi</span>
                             </div>
                         </div>
                         <p class="intro-text">
@@ -552,10 +562,62 @@
                 </div>
             </div>
 
+            <!-- ============================== SERIES 10: SUNA ============================== -->
+            <div class="page bleed page-spread-left">
+                <div class="page-content" style="background-image: url('yeni_resim/suna1.png');"></div>
+            </div>
+            <div class="page bleed page-spread-right">
+                <div class="page-content" style="background-image: url('yeni_resim/suna1.png');">
+                    <div class="hero-text-overlay bottom-right">
+                        <h3>Suna</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="page">
+                <div class="page-content">
+                    <div class="content-inner info-layout">
+                        <span class="series-badge">SERİ 10</span>
+                        <h2 class="series-title">SUNA</h2>
+                        <p class="series-desc">Organik kıvrımları ve ekstra derin oturum alanıyla (110cm) bulutların üzerinde hissettiren eşsiz bir deneyim. Troya kumaşın yumuşak dokusuyla modern yaşam alanlarında zarif bir sığınak.</p>
+                        <p class="series-desc-en">A unique experience that makes you feel like on clouds with its organic curves and extra deep seating area (110cm). An elegant sanctuary in modern living spaces with the soft texture of Troya fabric.</p>
+                        <ul class="series-specs">
+                            <li><span>Kumaş / Fabric:</span> TROYA</li>
+                            <li><span>Konsept / Concept:</span> Organik Lüks / Organic Luxury</li>
+                        </ul>
+                        <div class="technical-specs">
+                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 244 | D/D: 110 | Y/H: 83 cm</span></div>
+                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 79 | D/D: 92 | Y/H: 83 cm</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page bleed">
+                <div class="page-content">
+                    <div class="multi-image-layout">
+                        <figure><img src="yeni_resim/suna2.png" alt="Suna Detay"></figure>
+                        <figure><img src="yeni_resim/suna3.png" alt="Suna Berjer"></figure>
+                    </div>
+                </div>
+            </div>
+
             <!-- ============================== OUTRO ============================== -->
 
+            <!-- Empty Page 1 -->
+            <div class="page bleed">
+                <div class="page-content">
+                    <div class="pattern-bg"></div>
+                </div>
+            </div>
+
+            <!-- Empty Page 2 -->
+            <div class="page bleed">
+                <div class="page-content">
+                    <div class="pattern-bg"></div>
+                </div>
+            </div>
+
             <!-- Page 38: Back Cover -->
-            <div class="page bleed page-cover page-cover-bottom" data-density="hard">
+            <div class="page bleed page-cover page-cover-bottom" data-density="soft">
                 <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
                 <div class="page-content">
                     <div class="back-cover-inner">
@@ -584,8 +646,17 @@
                 </div>
             </div>
 
+            <!-- DOM Parity Dummy Page (Right) -->
+            <div class="page" style="background-color: #1a1a1a; box-shadow: none;">
+                <div class="page-content" style="background-color: #1a1a1a; box-shadow: none;"></div>
+            </div>
+
         </div> <!-- /flip-book -->
     </div>
+
+
+
+
 
     <!-- stPageFlip Library -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
@@ -602,7 +673,7 @@
                 autoSize: false,
                 flippingTime: 800,
                 maxShadowOpacity: 0.25,
-                showCover: true,
+                showCover: false,
                 startPage: 0,
                 mobileScrollSupport: true,
                 usePortrait: false, // Force spread mode on desktop for professional look
@@ -611,8 +682,56 @@
                 clickEventForward: true
             });
 
+            // Build pristine print clones before stPageFlip takes over the DOM
+            const printContainer = document.getElementById('print-container');
+            const allPages = document.querySelectorAll('.catalog-wrapper .page');
+            if (printContainer) {
+                allPages.forEach(p => {
+                    // Do not clone the DOM Parity Dummy Pages
+                    const bgStyle = p.getAttribute('style') || '';
+                    if (!bgStyle.includes('#1a1a1a')) {
+                        const clone = p.cloneNode(true);
+                        printContainer.appendChild(clone);
+                    }
+                });
+            }
+
             // Initial load
-            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+            pageFlip.loadFromHTML(allPages);
+            
+            // --- STRICT BOUNDARY PREVENTION & DOM BLOCKERS ---
+            const prevBlocker = document.createElement('div');
+            prevBlocker.style.cssText = 'position: absolute; top: 0; left: 0; width: 50%; height: 100%; z-index: 9999; cursor: default;';
+            const nextBlocker = document.createElement('div');
+            nextBlocker.style.cssText = 'position: absolute; top: 0; right: 0; width: 50%; height: 100%; z-index: 9999; cursor: default; display: none;';
+            
+            if (flipContainer.parentNode) {
+                flipContainer.parentNode.appendChild(prevBlocker);
+                flipContainer.parentNode.appendChild(nextBlocker);
+            }
+
+            const stopAll = (e) => { e.stopPropagation(); e.preventDefault(); };
+            ['mousedown', 'touchstart', 'pointerdown', 'mousemove', 'touchmove', 'pointermove'].forEach(evt => {
+                prevBlocker.addEventListener(evt, stopAll, { passive: false });
+                nextBlocker.addEventListener(evt, stopAll, { passive: false });
+            });
+
+            const updateBlockers = (currentPage) => {
+                const totalPages = pageFlip.getPageCount();
+                prevBlocker.style.display = (currentPage === 0) ? 'block' : 'none';
+                nextBlocker.style.display = (currentPage >= totalPages - 2) ? 'block' : 'none';
+            };
+
+            pageFlip.on('changeState', (e) => {
+                if (e.data === 'read') updateBlockers(pageFlip.getCurrentPageIndex());
+            });
+            
+            pageFlip.on('flip', (e) => {
+                updateBlockers(e.data); // Update immediately during turn
+            });
+            
+            // Initial call
+            setTimeout(() => { updateBlockers(pageFlip.getCurrentPageIndex()); }, 100);
             
             // Wait for first render to hide loader
             pageFlip.on('init', () => {
@@ -662,13 +781,13 @@
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
-                    // Update state if needed
                     const newIsMobile = window.innerWidth < 768;
                     if (newIsMobile !== isMobile) {
-                        location.reload(); // Hard reload for major orientation/device change is safest
+                        location.reload(); 
                     }
                 }, 250);
             });
+
         });
     </script>
 </body>
