@@ -1,608 +1,77 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SEDİRKON 2026 | Dergi Katalog</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="katalog_dergi.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEDİRKON 2026 | Premium Furniture Catalog</title>
+    <meta name="description" content="Sedirkon 2026 Premium Mobilya Kataloğu – İlham veren tasarımlar, üstün kalite.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+        .loader {
+            text-align: center;
+            color: #c9a96e;
+        }
+        .brand {
+            font-size: 2.5rem;
+            letter-spacing: 0.3em;
+            color: #e8d5b0;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 0.2s;
+        }
+        .tagline {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: #888;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 0.5s;
+        }
+        .spinner {
+            margin: 2rem auto;
+            width: 36px;
+            height: 36px;
+            border: 2px solid #333;
+            border-top-color: #c9a96e;
+            border-radius: 50%;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards 0.7s, spin 0.9s linear infinite 0.7s;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-
 <body>
-
-    <!-- Mobil Erişim Uyarısı / Mobile Access Warning -->
-    <div class="mobile-warning">
-        <div class="warning-icon">🖥️</div>
-        <h2>Masaüstü Deneyimi Gerekli</h2>
-        <h2 class="en-header">Desktop Experience Required</h2>
-        <p>Deneyiminiz İçin: Bu katalog sadece masaüstü bilgisayarlarda görüntülenebilir. Lütfen bilgisayar üzerinden erişin.</p>
-        <p class="en-text">For the best experience, this catalog is only viewable on desktop computers. Please access via a computer.</p>
+    <div class="loader">
+        <div class="brand">SEDİRKON</div>
+        <div class="tagline">Premium Furniture Collection · 2026</div>
+        <div class="spinner"></div>
     </div>
-
-    <!-- Controls Moved outside to fix ARIA accessibility error -->
-    <div class="controls" aria-hidden="false" aria-label="Katalog Navigasyonu">
-        <button id="btn-prev" class="btn" aria-label="Önceki Sayfa">Önceki</button>
-        <span class="page-count" aria-live="polite">Sayfa: <span id="page-current">1</span> / <span id="page-total">-</span></span>
-        <button id="btn-next" class="btn" aria-label="Sonraki Sayfa">Sonraki</button>
-    </div>
-
-    <div class="catalog-wrapper">
-        <!-- Flipbook Container -->
-        <div class="flip-book" id="flip-book">
-
-            <!-- Page 1: Cover -->
-            <div class="page page-cover page-cover-top" data-density="hard">
-                <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
-                <div class="page-content">
-                    <div class="cover-inner">
-                        <span class="eyebrow">SINCE 1986</span>
-                        <h1>SEDİRKON</h1>
-                        <p class="subtitle">PREMİUM MOBİLYA KOLEKSİYONU</p>
-                        <p class="subtitle-en">PREMIUM FURNITURE COLLECTION</p>
-                        <div class="cover-bottom">
-                            Doğadan İlham Aldı. İnsan İçin Tasarlandı.
-                            <div class="cover-bottom-en">Inspired by Nature. Designed for Mankind.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Page 2: Inside Cover (Blank/Pattern) -->
-            <div class="page page-inside-cover">
-                <div class="page-content">
-                    <div class="pattern-bg"></div>
-                    <img src="logo.jpeg" alt="Sedirkon Brand Logo" class="brand-showcase">
-                </div>
-            </div>
-
-            <!-- Page 3: Intro & TOC -->
-            <div class="page page-intro">
-                <div class="page-content">
-                    <div class="content-inner intro-page">
-                        <h2>İçindekiler</h2>
-                        <div class="toc-list">
-                            <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">İLKİM
-                                    Serisi</span></div>
-                            <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">KEHRİBAR
-                                    Serisi</span></div>
-                            <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">DEFNE
-                                    Serisi</span></div>
-                            <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">GÖKSU
-                                    Serisi</span></div>
-                            <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">MAKSİ
-                                    Serisi</span></div>
-                            <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">GÖKSU V2</span>
-                            </div>
-                            <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">İLKİM V2</span>
-                            </div>
-                            <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">İLKİM V3</span>
-                            </div>
-                            <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">KEHRİBAR V2</span>
-                            </div>
-                        </div>
-                        <p class="intro-text">
-                            Modern yaşam alanlarını doğanın organik formları ve kaliteli işçilikle buluşturan Sedirkon
-                            2026 koleksiyonuna hoş geldiniz.
-                            <br><span style="font-style: italic; opacity: 0.7; font-size: 0.9em;">Welcome to the Sedirkon 2026 collection, bringing together modern living spaces with nature's organic forms and quality craftsmanship.</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- ============================== SERIES 01: İLKİM ============================== -->
-
-            <!-- PAGE 5: İLKİM FULL IMAGE LEFT PART -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/ilkim1.png');">
-                </div>
-            </div>
-
-            <!-- PAGE 6: İLKİM FULL IMAGE RIGHT PART -->
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/ilkim1.png');">
-                    <!-- Text Overlay on bottom right of the spread -->
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>İlkim</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 7: İLKİM DETAILS -->
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 01</span>
-                        <h2 class="series-title">İLKİM</h2>
-                        <p class="series-desc">Yumuşak dokular ve organik ahşap formların huzur veren buluşması.
-                            Birinci sınıf gürgen detayları ve dokulu keten döşemesiyle hazırlanan uyumlu modern
-                            yerleşim.</p>
-                        <p class="series-desc-en">A peaceful meeting of soft textures and organic wooden forms. A harmonious modern arrangement crafted with premium hornbeam details and textured linen upholstery.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> TROYA/CASA</li>
-                            <li><span>Konsept / Concept:</span> Rafine Doku</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 244
-                                    | D/D: 91 | Y/H: 82 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 63 |
-                                    D/D: 90 | Y/H: 94 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 8: İLKİM MULTI IMAGES -->
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/ilkim2.png" alt="İlkim Loft"></figure>
-                        <figure><img src="yeni_resim/ilkim3.png" alt="İlkim Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 02: KEHRİBAR ============================== -->
-
-            <!-- PAGE 9: KEHRİBAR FULL IMAGE LEFT PART -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/kehribar1.png');">
-                </div>
-            </div>
-
-            <!-- PAGE 10: KEHRİBAR FULL IMAGE RIGHT PART -->
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/kehribar1.png');">
-                    <!-- Text Overlay on bottom right of the spread -->
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Kehribar</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 11: KEHRİBAR DETAILS -->
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 02</span>
-                        <h2 class="series-title">KEHRİBAR</h2>
-                        <p class="series-desc">Sıcaklık ve klasik zarafetin modern konforla yeniden yorumlanması.
-                            Derin oturum alanı ve peluş sırt minderleriyle üstün rahatlık arayanlar için tasarlandı.</p>
-                        <p class="series-desc-en">A modern reinterpretation of warmth and classic elegance. Designed for those seeking ultimate comfort with deep seating areas and plush back cushions.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> AMAZON</li>
-                            <li><span>Konsept / Concept:</span> Lüks Yumuşaklık</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 228
-                                    | D/D: 90 | Y/H: 83 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 79 |
-                                    D/D: 92 | Y/H: 83 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 12: KEHRİBAR MULTI IMAGES -->
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/kehribar2.png" alt="Kehribar Kompakt"></figure>
-                        <figure><img src="yeni_resim/kehribar3.png" alt="Kehribar Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 03: DEFNE ============================== -->
-
-            <!-- PAGE 13: DEFNE FULL IMAGE LEFT PART -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/defne1.png');">
-                </div>
-            </div>
-
-            <!-- PAGE 14: DEFNE FULL IMAGE RIGHT PART -->
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/defne1.png');">
-                    <!-- Text Overlay on bottom right of the spread -->
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Defne</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 15: DEFNE DETAILS -->
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 03</span>
-                        <h2 class="series-title">DEFNE</h2>
-                        <p class="series-desc">Zarif altın detaylar ve lüks dokularla sofistike bir duruş. Metalik
-                            altın çerçeveler ve ince bukle kumaş kombinasyonuyla evinizde prestijli bir atmosfer.</p>
-                        <p class="series-desc-en">A sophisticated stance with elegant gold details and luxurious textures. A prestigious atmosphere created by metallic gold frames and fine bouclé fabric.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> TROYA</li>
-                            <li><span>Konsept / Concept:</span> Modern Bukle</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 230
-                                    | D/D: 93 | Y/H: 70 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 80 |
-                                    D/D: 80 | Y/H: 80 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 16: DEFNE MULTI IMAGES -->
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/defne2.png" alt="Defne Salon"></figure>
-                        <figure><img src="yeni_resim/defne3.png" alt="Defne Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 04: GÖKSU ============================== -->
-
-            <!-- PAGE 17: GÖKSU FULL IMAGE LEFT PART -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/göksu1.png');">
-                </div>
-            </div>
-
-            <!-- PAGE 18: GÖKSU FULL IMAGE RIGHT PART -->
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/göksu1.png');">
-                    <!-- Text Overlay on bottom right of the spread -->
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Göksu</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 19: GÖKSU DETAILS -->
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 04</span>
-                        <h2 class="series-title">GÖKSU</h2>
-                        <p class="series-desc">Nordik minimalizmin cesur renk paletleriyle füzyonu. Bordo ve kremin
-                            cesur karışımı, masif gürgen ayaklar ve cam detaylarla mükemmel bir denge sağladı.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> İPEK</li>
-                            <li><span>Konsept / Concept:</span> Soft Kadife</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 240
-                                    | D/D: 92 | Y/H: 82 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 79 |
-                                    D/D: 92 | Y/H: 95 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 20: GÖKSU MULTI IMAGES -->
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/göksu2.png" alt="Göksu Panoramik"></figure>
-                        <figure><img src="yeni_resim/göksu3.png" alt="Göksu Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 05: MAKSİ ============================== -->
-
-            <!-- PAGE 21: MAKSİ FULL IMAGE LEFT PART -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/maksi1.png');">
-                </div>
-            </div>
-
-            <!-- PAGE 22: MAKSİ FULL IMAGE RIGHT PART -->
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/maksi1.png');">
-                    <!-- Text Overlay on bottom right of the spread -->
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Maksi</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 23: MAKSİ DETAILS -->
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 05</span>
-                        <h2 class="series-title">MAKSİ</h2>
-                        <p class="series-desc">Modern hatların ve geniş oturum alanlarının ustaca birleşimi. Aile boyu
-                            konfor için tasarlanan ekstra geniş yapısı ve fonksiyonel özellikleriyle yaşam alanınızın
-                            yeni odak noktası.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> MİRZA</li>
-                            <li><span>Konsept / Concept:</span> Şehirli Modern</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 208
-                                    | D/D: 80 | Y/H: 85 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 74 |
-                                    D/D: 80 | Y/H: 85 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 24: MAKSİ MULTI IMAGES -->
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/maksi2.png" alt="Maksi Detay"></figure>
-                        <figure><img src="yeni_resim/maksi3.png" alt="Maksi Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 06: GÖKSU V2 ============================== -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/v2göksü1.png');"></div>
-            </div>
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/v2göksü1.png');">
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Göksu V2</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 06</span>
-                        <h2 class="series-title">GÖKSU V2</h2>
-                        <p class="series-desc">Zamansız kadifenin modern hatlarla buluştuğu Göksu serisi, konforu en şık haliyle sunuyor. Pastel tonlar ve rafine detayların mükemmel dengesi.</p>
-                        <p class="series-desc-en">The Göksu series, where timeless velvet meets modern lines, offers comfort in its most elegant form. A perfect balance of pastel tones and refined details.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> NEVA</li>
-                            <li><span>Konsept / Concept:</span> Doğal Keten</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 240
-                                    | D/D: 92 | Y/H: 82 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 79 |
-                                    D/D: 92 | Y/H: 95 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/v2göksu2.png" alt="Göksu V2 Detay"></figure>
-                        <figure><img src="yeni_resim/v2göksü1.png" alt="Göksu V2 Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 07: İLKİM V2 ============================== -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/v2ilkim1.png');"></div>
-            </div>
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/v2ilkim1.png');">
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>İlkim V2</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 07</span>
-                        <h2 class="series-title">İLKİM V2</h2>
-                        <p class="series-desc">Organik formların ve yumuşak geçişlerin mükemmel uyumu. Her detayda
-                            hissedilen sıcaklık.</p>
-                        <p class="series-desc-en">The perfect harmony of organic forms and soft transitions. Warmth felt in every detail.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> TROYA</li>
-                            <li><span>Konsept / Concept:</span> Zamansız Tasarım</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 244
-                                    | D/D: 91 | Y/H: 82 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 63 |
-                                    D/D: 90 | Y/H: 94 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/v2ilkim2.png" alt="İlkim V2 Detay"></figure>
-                        <figure><img src="yeni_resim/v2ilkim3.png" alt="İlkim V2 Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 08: İLKİM V3 ============================== -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/v3ilkim1.png');"></div>
-            </div>
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/v3ilkim1.png');">
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>İlkim V3</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 08</span>
-                        <h2 class="series-title">İLKİM V3</h2>
-                        <p class="series-desc">Şehirli yaşamın enerjisini yansıtan dinamik bir tasarım. Geniş oturum alanı ve modüler yapısıyla fonksiyonelliği ön plana çıkaran modern bir yaklaşım.</p>
-                        <p class="series-desc-en">A dynamic design reflecting the energy of urban life. A modern approach prioritizing functionality with its spacious seating area and modular structure.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> TROYA</li>
-                            <li><span>Konsept / Concept:</span> Zamansız Tasarım</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 244
-                                    | D/D: 91 | Y/H: 82 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 63 |
-                                    D/D: 90 | Y/H: 94 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/v3ilkim2.png" alt="İlkim V3 Detay"></figure>
-                        <figure><img src="yeni_resim/v3ilkim3.png" alt="İlkim V3 Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== SERIES 09: KEHRİBAR V2 ============================== -->
-            <div class="page bleed page-spread-left">
-                <div class="page-content" style="background-image: url('yeni_resim/v2kehribar1.png?v=3');"></div>
-            </div>
-            <div class="page bleed page-spread-right">
-                <div class="page-content" style="background-image: url('yeni_resim/v2kehribar1.png?v=3');">
-                    <div class="hero-text-overlay bottom-right">
-                        <h3>Kehribar V2</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="page">
-                <div class="page-content">
-                    <div class="content-inner info-layout">
-                        <span class="series-badge">SERİ 09</span>
-                        <h2 class="series-title">KEHRİBAR V2</h2>
-                        <p class="series-desc">Sıcaklık ve lüksün modern formda yeniden doğuşu. Yenilenen detaylar ve güçlendirilmiş oturum ile eşsiz bir konfor deneyimi.</p>
-                        <p class="series-desc-en">The rebirth of warmth and luxury in a modern form. A unique comfort experience with renewed details and reinforced seating.</p>
-                        <ul class="series-specs">
-                            <li><span>Kumaş / Fabric:</span> PUKA</li>
-                            <li><span>Konsept / Concept:</span> Zengin Doku</li>
-                        </ul>
-                        <div class="technical-specs">
-                            <div class="spec-row"><span class="spec-label">Kanepe / Sofa</span><span class="spec-value">G/W: 228
-                                    | D/D: 90 | Y/H: 83 cm</span></div>
-                            <div class="spec-row"><span class="spec-label">Berjer / Armchair</span><span class="spec-value">G/W: 79 |
-                                    D/D: 92 | Y/H: 83 cm</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page bleed">
-                <div class="page-content">
-                    <div class="multi-image-layout">
-                        <figure><img src="yeni_resim/v2kehribar2.png?v=3" alt="Kehribar V2 Detay"></figure>
-                        <figure><img src="yeni_resim/v2kehribar3.png?v=3" alt="Kehribar V2 Berjer"></figure>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ============================== OUTRO ============================== -->
-
-            <!-- Page 38: Back Cover -->
-            <div class="page page-cover page-cover-bottom" data-density="hard">
-                <img src="kapak_arkaplan.png" class="print-bg" alt="Cover Background">
-                <div class="page-content">
-                    <div class="back-cover-inner">
-                        <div class="logo-area">
-                            <h2>SEDİRKON</h2>
-                            <p class="tagline">Geleceğin Klasikleri</p>
-                            <p style="font-size: 0.85em; color: #888; margin-top: 5px; font-style: italic;">Classics of the Future</p>
-                        </div>
-                        <div class="contact-info-grid">
-                            <div class="contact-text">
-                                <p><strong>İletişim / Contact</strong></p>
-                                <p>+90 543 940 2778</p>
-                                <p>+90 554 405 8489</p>
-                                <p>www.sedirkon.com.tr</p>
-                            </div>
-                            <div class="qr-container">
-                                <img src="maps_qr.png" alt="Showroom Konum QR" class="qr-code-premium">
-                                <span class="qr-label">Konum İçin Okutun</span>
-                                <span style="font-size: 0.7em; color: #888; margin-top: 2px;">Scan for Location</span>
-                            </div>
-                        </div>
-                        <div class="legal">&copy; 2026 Sedirkon Mobilya</div>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!-- /flip-book -->
-    </div>
-
-    <!-- stPageFlip Library -->
-    <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const isMobile = window.innerWidth < 768;
-            const flipContainer = document.getElementById('flip-book');
+        (function () {
+            // Detect browser language
+            var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            var isTurkish = lang === 'tr' || lang.startsWith('tr-');
+            var target = isTurkish ? 'katalog_dergi_tr.html' : 'katalog_dergi_en.html';
 
-            const pageFlip = new St.PageFlip(flipContainer, {
-                width: 500, // base width
-                height: 707, // base height
-                size: "stretch", 
-                autoSize: true, 
-                flippingTime: 800,
-                maxShadowOpacity: 0.3,
-                showCover: true,
-                startPage: 0,
-                mobileScrollSupport: true, 
-                usePortrait: isMobile, 
-                drawShadow: true,
-                showPageCorners: true,
-                minWidth: 250,
-                maxWidth: 2000,
-                minHeight: 400,
-                maxHeight: 2533,
-                swipeDistance: 30,
-                clickEventForward: true
-            });
-
-            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-
-            document.getElementById('page-total').innerText = pageFlip.getPageCount();
-
-            pageFlip.on('flip', (e) => {
-                const currentPage = pageFlip.getCurrentPageIndex() + 1;
-                const totalPages = pageFlip.getPageCount();
-
-                if (currentPage === 1) {
-                    document.getElementById('page-current').innerText = "1";
-                } else if (currentPage === totalPages) {
-                    document.getElementById('page-current').innerText = totalPages;
-                } else {
-                    if (isMobile) {
-                        document.getElementById('page-current').innerText = currentPage;
-                    } else {
-                        const leftPage = currentPage;
-                        const rightPage = Math.min(currentPage + 1, totalPages);
-                        document.getElementById('page-current').innerText = `${leftPage} / ${rightPage}`;
-                    }
-                }
-            });
-
-            document.getElementById('btn-prev').addEventListener('click', () => {
-                pageFlip.flipPrev();
-            });
-
-            document.getElementById('btn-next').addEventListener('click', () => {
-                pageFlip.flipNext();
-            });
-        });
+            // Small delay so the loading animation is visible
+            setTimeout(function () {
+                window.location.replace(target);
+            }, 1000);
+        })();
     </script>
 </body>
-
 </html>

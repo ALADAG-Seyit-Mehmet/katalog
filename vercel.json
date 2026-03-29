@@ -1,0 +1,28 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "rewrites": [],
+  "routes": [
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/index\\.html$", "dest": "/index.html" },
+    { "src": "^/katalog_dergi_tr\\.html$", "dest": "/katalog_dergi_tr.html" },
+    { "src": "^/katalog_dergi_en\\.html$", "dest": "/katalog_dergi_en.html" },
+    { "src": "^/katalog_dergi\\.css$", "dest": "/katalog_dergi.css" },
+    { "src": "^/kapak_arkaplan\\.png$", "dest": "/kapak_arkaplan.png" },
+    { "src": "^/logo\\.jpeg$", "dest": "/logo.jpeg" },
+    { "src": "^/maps_qr\\.png$", "dest": "/maps_qr.png" },
+    { "src": "^/yeni_resim/(.*)$", "dest": "/yeni_resim/$1" },
+    { "src": "^/kumaş_resim/(.*)$", "dest": "/kumaş_resim/$1" },
+    { "src": "^/(.*)", "dest": "/404" }
+  ]
+}
