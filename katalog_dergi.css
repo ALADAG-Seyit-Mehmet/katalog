@@ -211,17 +211,10 @@ body {
     margin-top: 10px;
 }
 
-/* Detect mobile/tablet and block content */
+/* Mobile/Tablet: Allow content, hide warning */
 @media (max-width: 1024px) {
-    .controls, .catalog-wrapper {
-        display: none !important;
-    }
     .mobile-warning {
-        display: flex;
-    }
-    body {
-        overflow: hidden !important;
-        position: fixed !important;
+        display: none !important;
     }
 }
 
@@ -311,10 +304,18 @@ body {
 }
 
 /* --- Typography --- */
-h1,
+h1 {
+    font-family: 'Playfair Display', serif;
+}
+
 h2,
 h3,
 h4 {
+    font-family: 'Great Vibes', cursive;
+}
+
+.logo-area h2,
+.back-cover-inner h2 {
     font-family: 'Playfair Display', serif;
 }
 
@@ -438,14 +439,14 @@ h4 {
 
 /* Specific styling for front cover focus */
 .front-logo {
-    width: 320px;
-    height: 140px;
+    width: 450px;
+    height: 190px;
     margin-bottom: 5px;
 }
 
 .back-logo {
-    width: 200px;
-    height: 80px;
+    width: 280px;
+    height: 110px;
 }
 
 /* --- Inside Cover (Pattern) --- */
@@ -459,8 +460,8 @@ h4 {
 .brand-showcase {
     position: relative;
     z-index: 2;
-    width: 65%;
-    max-width: 350px;
+    width: 80%;
+    max-width: 480px;
     mix-blend-mode: multiply;
     filter: brightness(1.1) contrast(1.1);
     opacity: 0.95;
@@ -566,7 +567,7 @@ h4 {
 
 .hero-text-overlay h3 {
     font-family: 'Great Vibes', cursive;
-    font-size: 4rem;
+    font-size: 5rem;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
     margin: 0;
@@ -884,10 +885,281 @@ h4 {
     }
 }
 
-/* Responsive constraints just for the wrapper */
-@media (max-width: 768px) {
+/* ========================================= */
+/* --- MOBILE & TABLET RESPONSIVE RULES --- */
+/* ========================================= */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
     .controls {
-        bottom: 10px;
-        padding: 8px 15px;
+        padding: 8px 16px;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+
+    .info-layout, .intro-page, .content-inner {
+        padding: 30px 35px !important;
+    }
+
+    .series-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-text-overlay h3 {
+        font-size: 3.5rem;
+    }
+
+    .cover-inner h1 {
+        font-size: 2.8rem;
+    }
+}
+
+/* Phone (max-width: 768px) */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .catalog-wrapper {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+    }
+
+    .controls {
+        padding: 6px 12px;
+        gap: 8px;
+        border-radius: 20px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .page-count {
+        font-size: 0.75rem;
+    }
+
+    /* Typography scaling for small screens */
+    .cover-inner h1 {
+        font-size: 2rem;
+        letter-spacing: 3px;
+    }
+
+    .subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 20px;
+    }
+
+    .subtitle-en {
+        font-size: 0.6em;
+        margin-top: -10px;
+    }
+
+    .cover-bottom {
+        font-size: 0.65rem;
+        bottom: 20px;
+    }
+
+    .eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+
+    /* Info pages */
+    .info-layout, .intro-page, .content-inner {
+        padding: 20px 24px !important;
+    }
+
+    .multi-image-layout {
+        padding: 10px !important;
+        gap: 8px;
+    }
+
+    .series-badge {
+        font-size: 0.6rem;
+        padding: 4px 10px;
+        margin-bottom: 10px;
+    }
+
+    .series-title {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .series-desc {
+        font-size: 0.8rem;
+        margin-bottom: 5px;
+    }
+
+    .series-desc-en {
+        font-size: 0.7rem;
+        margin-bottom: 15px;
+    }
+
+    .series-specs li {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+
+    .series-specs {
+        padding-top: 10px;
+    }
+
+    .technical-specs {
+        margin-top: 10px;
+        padding: 8px;
+    }
+
+    .spec-label {
+        font-size: 0.7rem;
+    }
+
+    .spec-value {
+        font-size: 0.75rem;
+    }
+
+    /* Hero text on spread images */
+    .hero-text-overlay h3 {
+        font-size: 2.5rem;
+    }
+
+    .bottom-right {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Intro / TOC */
+    .intro-page h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .toc-num {
+        font-size: 1.1rem;
+    }
+
+    .toc-title {
+        font-size: 0.8rem;
+    }
+
+    .toc-list {
+        gap: 10px;
+    }
+
+    .intro-text {
+        font-size: 0.75rem;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    /* Back cover */
+    .back-cover-inner h2 {
+        font-size: 1.6rem;
+    }
+
+    .tagline {
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+    }
+
+    .contact-info-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .contact-text {
+        text-align: center;
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 15px;
+    }
+
+    .contact-text p {
+        font-size: 0.8rem;
+    }
+
+    .contact-text strong {
+        font-size: 0.85rem;
+    }
+
+    .qr-code-premium {
+        width: 100px;
+        height: 100px;
+        padding: 4px;
+    }
+
+    .qr-label {
+        font-size: 0.6rem;
+    }
+
+    .legal {
+        margin-top: 15px;
+        font-size: 0.6rem;
+    }
+
+    /* Spread images in portrait mode: show full image per page */
+    .page-spread-left .page-content::before,
+    .page-spread-right .page-content::before {
+        width: 100% !important;
+    }
+
+    .page-spread-left .page-content::before {
+        left: 0 !important;
+    }
+
+    .page-spread-right .page-content::before {
+        right: auto !important;
+        left: 0 !important;
+    }
+
+    /* Brand showcase */
+    .brand-showcase {
+        width: 75%;
+        max-width: 320px;
+    }
+
+    /* Logo crops */
+    .front-logo {
+        width: 280px;
+        height: 120px;
+    }
+
+    .back-logo {
+        width: 200px;
+        height: 80px;
+    }
+}
+
+/* Very small phones (max-width: 380px) */
+@media (max-width: 380px) {
+    .cover-inner h1 {
+        font-size: 1.6rem;
+    }
+
+    .series-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-text-overlay h3 {
+        font-size: 2rem;
+    }
+
+    .info-layout, .intro-page, .content-inner {
+        padding: 15px 18px !important;
+    }
+
+    .toc-title {
+        font-size: 0.7rem;
+    }
+
+    .toc-num {
+        font-size: 0.9rem;
     }
 }
