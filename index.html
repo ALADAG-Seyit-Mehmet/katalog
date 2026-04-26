@@ -73,5 +73,71 @@
             }, 1000);
         })();
     </script>
+
+    <!-- MOBILE WARNING OVERLAY -->
+    <script>
+        (function() {
+            function checkMobile() {
+                var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 900;
+                if (isMobile && !document.getElementById('mobile-warning-overlay')) {
+                    var overlay = document.createElement('div');
+                    overlay.id = 'mobile-warning-overlay';
+                    overlay.style.position = 'fixed';
+                    overlay.style.top = '0';
+                    overlay.style.left = '0';
+                    overlay.style.width = '100vw';
+                    overlay.style.height = '100vh';
+                    overlay.style.backgroundColor = '#111';
+                    overlay.style.color = '#e8d5b0';
+                    overlay.style.zIndex = '999999';
+                    overlay.style.display = 'flex';
+                    overlay.style.flexDirection = 'column';
+                    overlay.style.justifyContent = 'center';
+                    overlay.style.alignItems = 'center';
+                    overlay.style.textAlign = 'center';
+                    overlay.style.padding = '30px';
+                    overlay.style.fontFamily = '\'Montserrat\', \'Georgia\', sans-serif';
+                    
+                    var isEn = window.location.pathname.includes('_en.html') || document.documentElement.lang === 'en';
+                    
+                    var icon = document.createElement('div');
+                    icon.innerHTML = '🖥️';
+                    icon.style.fontSize = '60px';
+                    icon.style.marginBottom = '20px';
+                    
+                    var title = document.createElement('h2');
+                    title.style.fontFamily = '\'Playfair Display\', serif';
+                    title.style.fontSize = '24px';
+                    title.style.marginBottom = '15px';
+                    title.style.color = '#d4af37';
+                    title.innerText = isEn ? 'Desktop Experience Required' : 'Masaüstü Deneyimi Gerekli';
+                    
+                    var text = document.createElement('p');
+                    text.style.fontSize = '15px';
+                    text.style.lineHeight = '1.6';
+                    text.style.opacity = '0.8';
+                    text.innerText = isEn 
+                        ? 'This premium digital catalog is designed specifically for desktop screens to showcase our 3D renders and detailed textures properly. Please visit us from a computer.' 
+                        : 'Bu premium dijital katalog, 3D renderları ve detaylı dokuları tam çözünürlükte sergilemek için masaüstü ekranlara özel tasarlanmıştır. Lütfen daha iyi bir deneyim için bilgisayarınızdan giriş yapın.';
+                        
+                    overlay.appendChild(icon);
+                    overlay.appendChild(title);
+                    overlay.appendChild(text);
+                    
+                    document.body.appendChild(overlay);
+                    document.body.style.overflow = 'hidden';
+                } else if (!isMobile && document.getElementById('mobile-warning-overlay')) {
+                    var el = document.getElementById('mobile-warning-overlay');
+                    el.parentNode.removeChild(el);
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            // Check on load and resize
+            window.addEventListener('load', checkMobile);
+            window.addEventListener('resize', checkMobile);
+        })();
+    </script>
+
 </body>
 </html>
