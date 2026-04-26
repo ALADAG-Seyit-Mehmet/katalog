@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap');
 
 :root {
     --gold: #d4af37;
@@ -335,7 +335,7 @@ h4 {
 /* --- Cover Pages --- */
 .page-cover {
     background-color: transparent;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('kapak_arkaplan.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('kapak_arkaplan.webp');
     background-size: cover;
     background-position: center;
     color: var(--gold);
@@ -1163,3 +1163,17 @@ h4 {
         font-size: 0.9rem;
     }
 }
+
+/* LEG OPTIONS GRID */
+.leg-options-page { display: flex; flex-direction: column; padding: 40px; padding-top: 120px; position: relative; height: 100%; background: #fff; }
+.leg-options-header { position: absolute; top: 30px; left: 0; width: 100%; text-align: center; }
+.leg-options-header h2 { font-size: 2rem; color: #2c3e50; font-family: 'Playfair Display', serif; font-weight: 600; }
+.leg-options-header p { font-size: 0.95rem; color: #7f8c8d; margin-top: 10px; max-width: 600px; margin-inline: auto; }
+.leg-grid { min-height: 0; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 20px; flex: 1; }
+.leg-item { min-height: 0; display: flex; flex-direction: column; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); transition: transform 0.3s ease; }
+.leg-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+.leg-img-wrapper { min-height: 0; flex: 1; display: flex; align-items: center; justify-content: center; background: #fcfcfc; border-radius: 6px; overflow: hidden; margin-bottom: 15px; }
+.leg-img-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.leg-info { text-align: center; margin-top: auto; }
+.leg-info h4 { font-size: 1.1rem; color: #34495e; margin-bottom: 5px; font-weight: 500; letter-spacing: 1px; }
+.leg-info p { font-size: 0.8rem; color: #95a5a6; line-height: 1.4; }
