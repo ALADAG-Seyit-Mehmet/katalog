@@ -1,0 +1,51 @@
+<!-- ============================== SERIES 11: SUNA KÖŞE ============================== -->
+
+        <!-- SUNA KÖŞE SPREAD LEFT -->
+        <div class="page page-spread-left">
+            <div class="page-content" style="background-image: url('yeni_resim/sunaköşe1.webp');"></div>
+        </div>
+        <!-- SUNA KÖŞE SPREAD RIGHT -->
+        <div class="page page-spread-right">
+            <div class="page-content" style="background-image: url('yeni_resim/sunaköşe1.webp');">
+                <div class="hero-text-overlay bottom-right">
+                    <h3>Suna Köşe</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUNA KÖŞE DETAILS -->
+        <div class="page">
+            <div class="page-content">
+                <div class="content-inner info-layout">
+                    <span class="series-badge">SERİ 11</span>
+                    <h2 class="series-title">Suna Köşe</h2>
+                    <p class="series-desc">Organik kıvrımları ve ekstra geniş oturum alanıyla bulutların
+                        üzerinde hissettiren köşe takımı konforu. Troya kumaşın yumuşak dokusuyla kalabalık aileler için
+                        zarif bir sığınak.</p>
+
+                    <ul class="series-specs">
+                        <li><span>Kumaş:</span> TROYA</li>
+                        <li><span>Konsept:</span> Organik Lüks</li>
+                    </ul>
+                    <div class="technical-specs">
+                        <div class="spec-row"><span class="spec-label">Köşe</span><span class="spec-value">G:
+                                320x320 | D: 110 | Y: 83 cm</span></div>
+                        <div class="spec-row"><span class="spec-label">Berjer</span><span
+                                class="spec-value">G: 79 | D: 92 | Y: 83 cm</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUNA KÖŞE MULTI IMAGES -->
+        <div class="page">
+            <div class="page-content">
+                <div class="multi-image-layout">
+                    <figure><img loading="lazy" decoding="async" src="yeni_resim/sunaköşe2.webp" alt="Suna Köşe Detay"></figure>
+                    <figure><img loading="lazy" decoding="async" src="yeni_resim/sunaköşe3.webp" alt="Suna Köşe Berjer"></figure>
+                </div>
+            </div>
+        </div>
+
+        
+        
