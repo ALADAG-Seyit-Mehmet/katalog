@@ -661,6 +661,11 @@ h4 {
     transform: scale(1.05);
 }
 
+.multi-image-layout img.contain-img {
+    object-fit: contain;
+    background-color: var(--light); /* Optional: to blend with background if it doesn't fill */
+}
+
 /* Right aligned text variations */
 .text-right {
     text-align: right;
