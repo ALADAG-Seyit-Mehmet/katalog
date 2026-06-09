@@ -168,10 +168,6 @@ def process_html():
                 page-break-after: always;
                 break-after: page;
             }
-            @page {
-                size: portrait;
-                margin: 0;
-            }
         }
 
         /* Düzeltme: Spread arka planının sola/sağa hizalanması */
@@ -231,6 +227,11 @@ def process_html():
     # 2. Baskı Versiyonu
     # =====================
     baski_soup = create_base_soup()
+    
+    baski_style = baski_soup.new_tag('style')
+    baski_style.string = "@media print { @page { size: portrait; } }"
+    baski_soup.head.append(baski_style)
+
     baski_container = baski_soup.new_tag('div', attrs={'class': 'vertical-print-layout'})
 
     for page in real_pages:
