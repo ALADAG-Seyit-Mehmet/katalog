@@ -30,7 +30,7 @@ for d in directories:
                 
                 # Convert RGBA to RGB if saving as webp and image is JPEG originally
                 # Actually WebP supports alpha, so RGBA is fine for WebP.
-                img.save(new_path, 'webp', quality=80)
+                img.save(new_path, 'webp', quality=95)
                 
                 old_size = os.path.getsize(old_path)
                 new_size = os.path.getsize(new_path)
