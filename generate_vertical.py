@@ -98,6 +98,7 @@ def process_html():
 
         /* MÜŞTERİ PDF ÇIKTISI İÇİN (Yatay A4) */
         @media print {
+            html { font-size: 1.4vw !important; }
             body { background-color: #fff; margin: 0; padding: 0; }
             .vertical-customer-layout {
                 padding: 0; gap: 0;
@@ -115,17 +116,19 @@ def process_html():
                 margin: 0 !important;
                 width: 100%;
                 max-width: none;
-                height: 100vh !important;
+                height: auto !important;
             }
             .vertical-customer-layout .cover-row .page-wrapper {
                 margin: 0 auto;
-                height: 100vh !important;
-                width: auto !important;
+                height: auto !important;
+                width: 50% !important;
+                aspect-ratio: 500 / 707 !important;
             }
             .vertical-customer-layout .spread-row .page-wrapper {
                 flex: 0 0 50% !important;
                 width: 50% !important;
-                height: 100vh !important;
+                height: auto !important;
+                aspect-ratio: 500 / 707 !important;
             }
             .page-wrapper {
                 page-break-inside: avoid;
