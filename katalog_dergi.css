@@ -444,6 +444,16 @@ h4 {
 }
 
 /* Specific styling for front cover focus */
+.top-logo {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 80px;
+    margin: 0;
+}
+
 .front-logo {
     width: 450px;
     height: 190px;
