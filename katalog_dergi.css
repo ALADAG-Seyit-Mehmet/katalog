@@ -503,20 +503,20 @@ h4 {
 }
 
 .intro-page h2 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: var(--dark);
-    margin-bottom: 15px;
+    margin-bottom: 35px;
     border-bottom: 2px solid var(--gold);
-    padding-bottom: 10px;
-    display: inline-block;
+    padding-bottom: 15px;
+    display: block;
 }
 
 .toc-list {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 2vh;
 }
 
 .toc-item {
@@ -527,15 +527,15 @@ h4 {
 
 .toc-num {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--gold);
     font-weight: 700;
 }
 
 .toc-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
     font-weight: 500;
     text-transform: uppercase;
 }
@@ -575,18 +575,18 @@ h4 {
 
 /* Since the image is spread across two panels, but the right panel is where the caption usually goes */
 .bottom-right {
-    bottom: 30px;
-    right: 30px;
+    bottom: 15px;
+    right: 20px;
     text-align: right;
 }
 
 .hero-text-overlay h3 {
     font-family: 'Great Vibes', cursive;
-    font-size: 4rem;
+    font-size: 10.5rem;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
     margin: 0;
-    line-height: 1;
+    line-height: 0.8;
 }
 
 /* --- Info Text Page --- */
@@ -930,7 +930,7 @@ h4 {
     }
 
     .hero-text-overlay h3 {
-        font-size: 3rem;
+        font-size: 7.5rem;
     }
 
     .cover-inner h1 {
@@ -1046,7 +1046,7 @@ h4 {
 
     /* Hero text on spread images */
     .hero-text-overlay h3 {
-        font-size: 2.2rem;
+        font-size: 5.5rem;
     }
 
     .bottom-right {
